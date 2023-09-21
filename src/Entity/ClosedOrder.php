@@ -28,12 +28,12 @@ class ClosedOrder
     private $paid;
 
     /**
-     * @ORM\Column(type="decimal", precision=7, scale=2)
+     * @ORM\Column(type="decimal", precision=7, scale=2, options={"unsigned"=true})
      */
     private $total;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $count;
 
@@ -117,7 +117,7 @@ class ClosedOrder
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
     {
         $this->createdAt = $createdAt;
 

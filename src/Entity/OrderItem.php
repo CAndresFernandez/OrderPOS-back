@@ -18,7 +18,7 @@ class OrderItem
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"unsigned"=true})
      */
     private $quantity;
 

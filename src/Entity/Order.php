@@ -21,7 +21,7 @@ class Order
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default"=0, "unsigned"=true})
      */
     private $status;
 
@@ -79,7 +79,7 @@ class Order
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
     {
         $this->createdAt = $createdAt;
 
@@ -91,7 +91,7 @@ class Order
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
     {
         $this->updatedAt = $updatedAt;
 
@@ -101,7 +101,7 @@ class Order
     /**
      * @return Collection<int, OrderItem>
      */
-    public function getOrderItems(): Collection
+    public function getOrderItems() : Collection
     {
         return $this->orderItems;
     }

@@ -20,7 +20,7 @@ class Category
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 
@@ -30,7 +30,7 @@ class Category
     private $menu_position;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default"=true})
      */
     private $active;
 
@@ -100,7 +100,7 @@ class Category
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
     {
         $this->createdAt = $createdAt;
 
@@ -112,7 +112,7 @@ class Category
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
     {
         $this->updatedAt = $updatedAt;
 
@@ -122,7 +122,7 @@ class Category
     /**
      * @return Collection<int, Item>
      */
-    public function getItems(): Collection
+    public function getItems() : Collection
     {
         return $this->items;
     }

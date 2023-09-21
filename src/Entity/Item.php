@@ -23,7 +23,7 @@ class Item
     private $name;
 
     /**
-     * @ORM\Column(type="decimal", precision=6, scale=2)
+     * @ORM\Column(type="decimal", precision=6, scale=2, options={"unsigned"=true})
      */
     private $price;
 
@@ -33,7 +33,7 @@ class Item
     private $description;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default"=false})
      */
     private $active;
 
@@ -111,7 +111,7 @@ class Item
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
     {
         $this->createdAt = $createdAt;
 
@@ -123,7 +123,7 @@ class Item
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
     {
         $this->updatedAt = $updatedAt;
 
