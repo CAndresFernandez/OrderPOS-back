@@ -2,15 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @ORM\Entity(repositoryClass=ItemRepository::class)
  */
-class Category
+class Item
 {
     /**
      * @ORM\Id
@@ -20,14 +18,19 @@ class Category
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=64)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="decimal", precision=6, scale=2)
      */
-    private $menu_position;
+    private $price;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     /**
      * @ORM\Column(type="boolean")
@@ -45,14 +48,10 @@ class Category
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Item::class, mappedBy="category", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="items")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $items;
-
-    public function __construct()
-    {
-        $this->items = new ArrayCollection();
-    }
+    private $category;
 
     public function getId(): ?int
     {
@@ -71,14 +70,26 @@ class Category
         return $this;
     }
 
-    public function getMenuPosition(): ?int
+    public function getPrice(): ?string
     {
-        return $this->menu_position;
+        return $this->price;
     }
 
-    public function setMenuPosition(int $menu_position): self
+    public function setPrice(string $price): self
     {
-        $this->menu_position = $menu_position;
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -119,32 +130,14 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection<int, Item>
-     */
-    public function getItems(): Collection
+    public function getCategory(): ?Category
     {
-        return $this->items;
+        return $this->category;
     }
 
-    public function addItem(Item $item): self
+    public function setCategory(?Category $category): self
     {
-        if (!$this->items->contains($item)) {
-            $this->items[] = $item;
-            $item->setCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeItem(Item $item): self
-    {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getCategory() === $this) {
-                $item->setCategory(null);
-            }
-        }
+        $this->category = $category;
 
         return $this;
     }

@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\TableRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @ORM\Entity(repositoryClass=TableRepository::class)
+ * @ORM\Table(name="`table`")
  */
-class Category
+class Table
 {
     /**
      * @ORM\Id
@@ -20,14 +19,14 @@ class Category
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $name;
+    private $number;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $menu_position;
+    private $covers;
 
     /**
      * @ORM\Column(type="boolean")
@@ -45,40 +44,35 @@ class Category
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Item::class, mappedBy="category", orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Order::class, mappedBy="table_id", cascade={"persist", "remove"})
      */
-    private $items;
-
-    public function __construct()
-    {
-        $this->items = new ArrayCollection();
-    }
+    private $relatedOrder;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNumber(): ?int
     {
-        return $this->name;
+        return $this->number;
     }
 
-    public function setName(string $name): self
+    public function setNumber(int $number): self
     {
-        $this->name = $name;
+        $this->number = $number;
 
         return $this;
     }
 
-    public function getMenuPosition(): ?int
+    public function getCovers(): ?int
     {
-        return $this->menu_position;
+        return $this->covers;
     }
 
-    public function setMenuPosition(int $menu_position): self
+    public function setCovers(int $covers): self
     {
-        $this->menu_position = $menu_position;
+        $this->covers = $covers;
 
         return $this;
     }
@@ -119,32 +113,19 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection<int, Item>
-     */
-    public function getItems(): Collection
+    public function getRelatedOrder(): ?Order
     {
-        return $this->items;
+        return $this->relatedOrder;
     }
 
-    public function addItem(Item $item): self
+    public function setRelatedOrder(Order $relatedOrder): self
     {
-        if (!$this->items->contains($item)) {
-            $this->items[] = $item;
-            $item->setCategory($this);
+        // set the owning side of the relation if necessary
+        if ($relatedOrder->getTableId() !== $this) {
+            $relatedOrder->setTableId($this);
         }
 
-        return $this;
-    }
-
-    public function removeItem(Item $item): self
-    {
-        if ($this->items->removeElement($item)) {
-            // set the owning side to null (unless already changed)
-            if ($item->getCategory() === $this) {
-                $item->setCategory(null);
-            }
-        }
+        $this->relatedOrder = $relatedOrder;
 
         return $this;
     }
