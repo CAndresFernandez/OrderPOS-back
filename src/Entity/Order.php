@@ -44,7 +44,7 @@ class Order
      * @ORM\OneToOne(targetEntity=Table::class, inversedBy="relatedOrder", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $table_id;
+    private $relatedTable;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
@@ -79,7 +79,7 @@ class Order
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -91,7 +91,7 @@ class Order
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -101,7 +101,7 @@ class Order
     /**
      * @return Collection<int, OrderItem>
      */
-    public function getOrderItems() : Collection
+    public function getOrderItems(): Collection
     {
         return $this->orderItems;
     }
@@ -128,14 +128,14 @@ class Order
         return $this;
     }
 
-    public function getTableId(): ?Table
+    public function getTable(): ?Table
     {
-        return $this->table_id;
+        return $this->relatedTable;
     }
 
-    public function setTableId(Table $table_id): self
+    public function setTable(Table $relatedTable): self
     {
-        $this->table_id = $table_id;
+        $this->relatedTable = $relatedTable;
 
         return $this;
     }
