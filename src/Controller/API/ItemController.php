@@ -2,6 +2,9 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Item;
+use App\Repository\ItemRepository;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,13 +12,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class ItemController extends AbstractController
 {
     /**
-     * @Route("/a/p/i/item", name="app_a_p_i_item")
+     * @Route("/api/items", name="app_api_item_list", methods={"GET"})
      */
-    public function index(): JsonResponse
+    public function list(ItemRepository $itemRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/API/ItemController.php',
-        ]);
+        $items = $itemRepository->findAll();
+
+        return $this->json($items, Response::HTTP_OK,[], ["groups" => "items"]);
     }
+
+    /**
+     * @Route("/api/items/{id}", name="app_api_item_show", methods={"GET"})
+     */
+    public function show(Item $item): JsonResponse
+    {
+        // on retour les films en json
+        return $this->json($item, Response::HTTP_OK, [],["groups" => "items"]);
+    }
+
 }
+

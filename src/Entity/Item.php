@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\ItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ItemRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ItemRepository::class)
@@ -14,42 +15,50 @@ class Item
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"items"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"items"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal", precision=6, scale=2, options={"unsigned"=true})
+     * @Groups({"items"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"items"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean", options={"default"=false})
+     * @Groups({"items"})
      */
     private $active;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"items"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"items"})
      */
     private $updatedAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="items")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"items"})
      */
     private $category;
 
