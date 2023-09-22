@@ -42,20 +42,20 @@ class ItemController extends AbstractController
     /**
      * @Route("/api/items/{id}", name="app_api_item_show", methods={"PUT"})
      */
-    public function edit($id, Request $request, ItemRepository $itemRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function edit($id, Request $request, ItemRepository $itemRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
         $item = $itemRepository->find($id);
 
+        $jsonContent = $request->getContent();
         if (!$item) {
             return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
-        $data = json_decode($request->getContent(), true);
-
-        $item->setActive($data['active']);
+        $data = $serializer->deserialize($jsonContent, Item::class, 'json');
+        
+        $item->setActive($data->isActive());
 
         $entityManager->flush();
-
 
         return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
     }
@@ -103,7 +103,6 @@ class ItemController extends AbstractController
     
         return $this->json($items, Response::HTTP_OK, [], ["groups" => "items"]);
     }
-
 
 }
 
