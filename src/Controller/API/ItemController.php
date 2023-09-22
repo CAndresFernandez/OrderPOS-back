@@ -4,7 +4,9 @@ namespace App\Controller\API;
 
 use App\Entity\Item;
 use App\Repository\ItemRepository;
+use App\Repository\OrderRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +27,7 @@ class ItemController extends AbstractController
         return $this->json($items, Response::HTTP_OK,[], ["groups" => "items"]);
     }
 
+
     /**
      * @Route("/api/items/{id}", name="app_api_item_show", methods={"GET"})
      */
@@ -34,6 +37,7 @@ class ItemController extends AbstractController
 
         return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
     }
+
 
     /**
      * @Route("/api/items/{id}", name="app_api_item_show", methods={"PUT"})
@@ -56,6 +60,7 @@ class ItemController extends AbstractController
         return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
     }
 
+
     /**
      * @Route("/api/categories/{id}/items", name="app_api_item_listByCategory", methods={"GET"})
      */
@@ -71,6 +76,32 @@ class ItemController extends AbstractController
 
         return $this->json($items, Response::HTTP_OK, [], ["groups" => "items"]);
 
+    }
+
+    
+    /**
+     * @Route("/api/orders/{id}/items", name="app_api_item_listByOrder", methods={"GET"})
+     */
+    public function listByOrder($id, OrderRepository $orderRepository, OrderItemRepository $orderItemRepository): JsonResponse
+    {
+        $order = $orderRepository->find($id);
+    
+        if (!$order) {
+            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
+        }
+    
+        $orderItems = $orderItemRepository->findBy(['order_id' => $order]);
+    
+        $items = [];
+    
+        foreach ($orderItems as $orderItem) {
+            $item = $orderItem->getItem();
+            if ($item) {
+                $items[] = $item;
+            }
+        }
+    
+        return $this->json($items, Response::HTTP_OK, [], ["groups" => "items"]);
     }
 
 
