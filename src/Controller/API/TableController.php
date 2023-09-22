@@ -4,7 +4,6 @@ namespace App\Controller\API;
 
 use App\Repository\TableRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +24,7 @@ class TableController extends AbstractController
     }
 
     /**
-     * @Route("api/tables/{id}", name="app_api_table_listByUser")
+     * @Route("api/users/{id}/tables", name="app_api_table_listByUser")
      */
     public function showTablesByUser($id, TableRepository $tableRepository): JsonResponse
     {
@@ -37,23 +36,18 @@ class TableController extends AbstractController
     }
 
     /**
-     * @Route("/api/tables/{id}", name="app_api_table_show", methods={"PUT"})
+     * @Route("/api/tables/{id}", name="app_api_table_show", methods={"GET"})
      */
-    public function edit($id, Request $request, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function edit($id, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         $table = $tableRepository->find($id);
 
-        if (!$table) {
-            return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
+        if ($table->isActive()) {
+            $table->setActive(false);
+        } else {
+            $table->setActive(true);
         }
-
-        $data = json_decode($request->getContent(), true);
-
-        $table->setActive($data['active']);
-
         $entityManager->flush();
-
-
-        return $this->json($table, Response::HTTP_OK,[], ["groups" => "tables"]);
+        return $this->json($table, Response::HTTP_OK, [], ["groups" => "tables"]);
     }
 }
