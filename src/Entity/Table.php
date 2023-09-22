@@ -94,7 +94,7 @@ class Table
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -106,7 +106,7 @@ class Table
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
