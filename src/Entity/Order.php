@@ -81,7 +81,7 @@ class Order
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 

@@ -39,6 +39,23 @@ class TableRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Récupère toutes les  tables d'un user et les tries par date de creation
+     * Requêtes customisé avec le Query Builder
+     */
+    public function findAllByUser($id)
+    {
+        return $this->createQueryBuilder('t')
+            ->add('from', 'App\Entity\Table t')
+            ->innerJoin('App\Entity\Order', 'o', 'WITH', 'o.relatedTable = t.id')
+            ->Where('o.user = :userId')
+            ->setParameter(':userId', $id)
+            ->orderBy('o.createdAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    //    /**
 //    /**
     //     * @return Table[] Returns an array of Table objects
     //     */
@@ -54,7 +71,7 @@ class TableRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-//    public function findOneBySomeField($value): ?Table
+    //    public function findOneBySomeField($value): ?Table
     //    {
     //        return $this->createQueryBuilder('t')
     //            ->andWhere('t.exampleField = :val')
@@ -63,5 +80,4 @@ class TableRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
-
 }
