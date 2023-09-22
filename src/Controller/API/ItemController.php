@@ -24,10 +24,11 @@ class ItemController extends AbstractController
     /**
      * @Route("/api/items/{id}", name="app_api_item_show", methods={"GET"})
      */
-    public function show(Item $item): JsonResponse
+    public function show($id, ItemRepository $itemRepository): JsonResponse
     {
-        // on retour les films en json
-        return $this->json($item, Response::HTTP_OK, [],["groups" => "items"]);
+        $item = $itemRepository->find($id);
+
+        return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
     }
 
 }
