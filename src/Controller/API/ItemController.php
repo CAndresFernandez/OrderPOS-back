@@ -4,6 +4,7 @@ namespace App\Controller\API;
 
 use App\Entity\Item;
 use App\Repository\ItemRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +54,23 @@ class ItemController extends AbstractController
 
 
         return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
+    }
+
+    /**
+     * @Route("/api/categories/{id}/items", name="app_api_item_listByCategory", methods={"GET"})
+     */
+    public function listByCategory($id, CategoryRepository $categoryRepository, ItemRepository $itemRepository): JsonResponse
+    {
+        $category = $categoryRepository->find($id);
+
+        if (!$category) {
+            return $this->json(['message' => 'Catégorie non trouvée.'], Response::HTTP_NOT_FOUND);
+        }
+
+        $items = $itemRepository->findBy(['category' => $category]);
+
+        return $this->json($items, Response::HTTP_OK, [], ["groups" => "items"]);
+
     }
 
 
