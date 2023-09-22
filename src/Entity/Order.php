@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
  * @ORM\Table(name="`order`")
+ * @ORM\HasLifecycleCallbacks
  */
 class Order
 {
@@ -36,7 +38,7 @@ class Order
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder", orphanRemoval=true)
      */
     private $orderItems;
 
@@ -44,7 +46,7 @@ class Order
      * @ORM\OneToOne(targetEntity=Table::class, inversedBy="relatedOrder", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $table_id;
+    private $relatedTable;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
@@ -79,7 +81,7 @@ class Order
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -91,9 +93,12 @@ class Order
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt() : self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new DateTimeImmutable();
 
         return $this;
     }
@@ -101,7 +106,7 @@ class Order
     /**
      * @return Collection<int, OrderItem>
      */
-    public function getOrderItems() : Collection
+    public function getOrderItems(): Collection
     {
         return $this->orderItems;
     }
@@ -110,7 +115,7 @@ class Order
     {
         if (!$this->orderItems->contains($orderItem)) {
             $this->orderItems[] = $orderItem;
-            $orderItem->setOrderId($this);
+            $orderItem->setOrder($this);
         }
 
         return $this;
@@ -120,22 +125,22 @@ class Order
     {
         if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getOrderId() === $this) {
-                $orderItem->setOrderId(null);
+            if ($orderItem->getOrder() === $this) {
+                $orderItem->setOrder(null);
             }
         }
 
         return $this;
     }
 
-    public function getTableId(): ?Table
+    public function getTable(): ?Table
     {
-        return $this->table_id;
+        return $this->relatedTable;
     }
 
-    public function setTableId(Table $table_id): self
+    public function setTable(Table $relatedTable): self
     {
-        $this->table_id = $table_id;
+        $this->relatedTable = $relatedTable;
 
         return $this;
     }

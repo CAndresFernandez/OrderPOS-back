@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\TableRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TableRepository::class)
  * @ORM\Table(name="`table`")
+ * @ORM\HasLifecycleCallbacks
  */
 class Table
 {
@@ -15,36 +18,42 @@ class Table
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"tables"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer", unique=true)
+     * @Groups({"tables"})
      */
     private $number;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Groups({"tables"})
      */
     private $covers;
 
     /**
      * @ORM\Column(type="boolean", options={"default"=false})
+     * @Groups({"tables"})
      */
     private $active;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"tables"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"tables"})
      */
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=Order::class, mappedBy="table_id", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Order::class, mappedBy="relatedTable", cascade={"persist", "remove"})
      */
     private $relatedOrder;
 
@@ -94,7 +103,7 @@ class Table
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -106,9 +115,12 @@ class Table
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt() : self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new DateTimeImmutable();
 
         return $this;
     }
@@ -121,8 +133,8 @@ class Table
     public function setRelatedOrder(Order $relatedOrder): self
     {
         // set the owning side of the relation if necessary
-        if ($relatedOrder->getTableId() !== $this) {
-            $relatedOrder->setTableId($this);
+        if ($relatedOrder->getTable() !== $this) {
+            $relatedOrder->setTable($this);
         }
 
         $this->relatedOrder = $relatedOrder;
