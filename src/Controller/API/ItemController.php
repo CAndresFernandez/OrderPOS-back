@@ -40,23 +40,23 @@ class ItemController extends AbstractController
 
 
     /**
-     * @Route("/api/items/{id}", name="app_api_item_show", methods={"PUT"})
+     * @Route("/api/items/{id}", name="app_api_item_toggle_status", methods={"PUT"})
      */
-    public function edit($id, Request $request, ItemRepository $itemRepository, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function toggleStatus(int $id, ItemRepository $itemRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         $item = $itemRepository->find($id);
 
-        $jsonContent = $request->getContent();
         if (!$item) {
             return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
         }
-
-        $data = $serializer->deserialize($jsonContent, Item::class, 'json');
         
-        $item->setActive($data->isActive());
+        if ($item->isActive()) {
+            $item->setActive(false);
+        } else {
+            $item->setActive(true);
+        }
 
         $entityManager->flush();
-
         return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
     }
 
