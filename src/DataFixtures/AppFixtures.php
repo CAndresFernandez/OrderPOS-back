@@ -125,7 +125,6 @@ class AppFixtures extends Fixture
                 $orderItem->setQuantity(rand(1, 3));
                 $orderItem->setComment($faker->words(rand(0, 3), true));
                 $orderItem->setItem($itemList[rand(0, 19)]);
-                // $orderItem->setOrder($orderList[rand(0, 12)]);
                 $order->addOrderItem($orderItem);
                 $manager->persist($orderItem);
             }
