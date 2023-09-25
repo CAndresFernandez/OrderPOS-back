@@ -20,39 +20,45 @@ class Order
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"orders"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer", options={"default"=0, "unsigned"=true})
+     * @Groups({"orders"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"orders"})
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"orders"})
      */
     private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder", orphanRemoval=true)
+     * @Groups({"orders"})
      */
     private $orderItems;
 
     /**
      * @ORM\OneToOne(targetEntity=Table::class, inversedBy="relatedOrder", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"orders"})
      */
     private $relatedTable;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"users"})
+     * @Groups({"users", "orders"})
      */
     private $user;
 
@@ -83,7 +89,7 @@ class Order
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
     {
         $this->createdAt = $createdAt;
 
@@ -98,7 +104,7 @@ class Order
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(): self
+    public function setUpdatedAt() : self
     {
         $this->updatedAt = new DateTimeImmutable();
 
@@ -135,12 +141,12 @@ class Order
         return $this;
     }
 
-    public function getTable(): ?Table
+    public function getRelatedTable(): ?Table
     {
         return $this->relatedTable;
     }
 
-    public function setTable(Table $relatedTable): self
+    public function setRelatedTable(Table $relatedTable): self
     {
         $this->relatedTable = $relatedTable;
 

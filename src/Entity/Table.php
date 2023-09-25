@@ -103,7 +103,7 @@ class Table
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
     {
         $this->createdAt = $createdAt;
 
@@ -133,8 +133,8 @@ class Table
     public function setRelatedOrder(Order $relatedOrder): self
     {
         // set the owning side of the relation if necessary
-        if ($relatedOrder->getTable() !== $this) {
-            $relatedOrder->setTable($this);
+        if ($relatedOrder->getRelatedTable() !== $this) {
+            $relatedOrder->setRelatedTable($this);
         }
 
         $this->relatedOrder = $relatedOrder;
