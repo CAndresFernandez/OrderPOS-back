@@ -38,22 +38,18 @@ class TableController extends AbstractController
     /**
      * @Route("/api/tables/{id}", name="app_api_table_status", methods={"PUT"})
      */
-    public function toggleStatus($id, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $table = $tableRepository->find($id);
+    public function toggleStatus(int $id, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
+    {$table = $tableRepository->find($id);
 
         if (!$table) {
-            return $this->json(['message' => 'Table not found.'], Response::HTTP_NOT_FOUND);
+            return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
-        if ($table->isActive() !== null && $table->isActive()) {
+        if ($table->isActive()) {
             $table->setActive(false);
-        } elseif ($table->isActive() === false) {
-            $table->setActive(true);
         } else {
-
+            $table->setActive(true);
         }
-
         $entityManager->flush();
         return $this->json($table, Response::HTTP_OK, [], ["groups" => "tables"]);
     }

@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/api/categories", name="app_api_category_show")
+     * @Route("/api/categories", name="app_api_category_list")
      */
     public function list(CategoryRepository $categoryRepository): JsonResponse
     {
