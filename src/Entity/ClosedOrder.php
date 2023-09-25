@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ClosedOrderRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ClosedOrderRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ClosedOrderRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class ClosedOrder
 {
@@ -14,36 +16,43 @@ class ClosedOrder
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"closed"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"closed"})
      */
     private $items = [];
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"closed"})
      */
     private $paid;
 
     /**
      * @ORM\Column(type="decimal", precision=7, scale=2, options={"unsigned"=true})
+     * @Groups({"closed"})
      */
     private $total;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Groups({"closed"})
      */
     private $count;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"closed"})
      */
     private $userId;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"closed"})
      */
     private $createdAt;
 
@@ -117,9 +126,12 @@ class ClosedOrder
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt =  new \DateTimeImmutable();
 
         return $this;
     }
