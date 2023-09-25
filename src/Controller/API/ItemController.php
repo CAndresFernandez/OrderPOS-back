@@ -39,8 +39,7 @@ class ItemController extends AbstractController
      * @Route("/api/items/{id}", name="app_api_item_toggle_status", methods={"PUT"})
      */
     public function toggleStatus(int $id, ItemRepository $itemRepository, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $item = $itemRepository->find($id);
+    {$item = $itemRepository->find($id);
 
         if (!$item) {
             return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
