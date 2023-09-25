@@ -3,10 +3,10 @@
 namespace App\Controller\API;
 
 use App\Repository\CategoryRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CategoryController extends AbstractController
 {
@@ -15,7 +15,7 @@ class CategoryController extends AbstractController
      */
     public function list(CategoryRepository $categoryRepository): JsonResponse
     {
-        //  récupérer les categoriess
+        //  récupérer les categories
         $categories = $categoryRepository->findAll();
 
         // on retour les catégories en json

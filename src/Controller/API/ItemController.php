@@ -3,17 +3,15 @@
 namespace App\Controller\API;
 
 use App\Entity\Item;
-use App\Repository\ItemRepository;
-use App\Repository\OrderRepository;
 use App\Repository\CategoryRepository;
+use App\Repository\ItemRepository;
 use App\Repository\OrderItemRepository;
+use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ItemController extends AbstractController
 {
@@ -24,9 +22,8 @@ class ItemController extends AbstractController
     {
         $items = $itemRepository->findAll();
 
-        return $this->json($items, Response::HTTP_OK,[], ["groups" => "items"]);
+        return $this->json($items, Response::HTTP_OK, [], ["groups" => "items"]);
     }
-
 
     /**
      * @Route("/api/items/{id}", name="app_api_item_show", methods={"GET"})
@@ -35,9 +32,8 @@ class ItemController extends AbstractController
     {
         $item = $itemRepository->find($id);
 
-        return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
+        return $this->json($item, Response::HTTP_OK, [], ["groups" => "items"]);
     }
-
 
     /**
      * @Route("/api/items/{id}", name="app_api_item_toggle_status", methods={"PUT"})
@@ -49,7 +45,7 @@ class ItemController extends AbstractController
         if (!$item) {
             return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
         }
-        
+
         if ($item->isActive()) {
             $item->setActive(false);
         } else {
@@ -57,9 +53,8 @@ class ItemController extends AbstractController
         }
 
         $entityManager->flush();
-        return $this->json($item, Response::HTTP_OK,[], ["groups" => "items"]);
+        return $this->json($item, Response::HTTP_OK, [], ["groups" => "items"]);
     }
-
 
     /**
      * @Route("/api/categories/{id}/items", name="app_api_item_listByCategory", methods={"GET"})
@@ -78,31 +73,29 @@ class ItemController extends AbstractController
 
     }
 
-    
     /**
      * @Route("/api/orders/{id}/items", name="app_api_item_listByOrder", methods={"GET"})
      */
     public function listByOrder($id, OrderRepository $orderRepository, OrderItemRepository $orderItemRepository): JsonResponse
     {
         $order = $orderRepository->find($id);
-    
+
         if (!$order) {
             return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
         }
-    
+
         $orderItems = $orderItemRepository->findBy(['order_id' => $order]);
-    
+
         $items = [];
-    
+
         foreach ($orderItems as $orderItem) {
             $item = $orderItem->getItem();
             if ($item) {
                 $items[] = $item;
             }
         }
-    
+
         return $this->json($items, Response::HTTP_OK, [], ["groups" => "items"]);
     }
 
 }
-
