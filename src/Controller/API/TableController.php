@@ -26,7 +26,7 @@ class TableController extends AbstractController
     /**
      * @Route("api/users/{id}/tables", name="app_api_table_listByUser")
      */
-    public function showTablesByUser($id, TableRepository $tableRepository): JsonResponse
+    public function listTablesByUser($id, TableRepository $tableRepository): JsonResponse
     {
         //  récupérer les tables
         $tables = $tableRepository->findAllByUser($id);
@@ -39,7 +39,8 @@ class TableController extends AbstractController
      * @Route("/api/tables/{id}", name="app_api_table_status", methods={"PUT"})
      */
     public function toggleStatus(int $id, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
-    {$table = $tableRepository->find($id);
+    {
+        $table = $tableRepository->find($id);
 
         if (!$table) {
             return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
