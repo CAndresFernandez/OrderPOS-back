@@ -8,6 +8,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ClosedOrderRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class ClosedOrder
 {
@@ -51,6 +52,7 @@ class ClosedOrder
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"closed"})
      */
     private $createdAt;
 
@@ -124,9 +126,12 @@ class ClosedOrder
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt(): self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt =  new \DateTimeImmutable();
 
         return $this;
     }

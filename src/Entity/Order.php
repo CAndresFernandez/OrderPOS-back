@@ -83,7 +83,7 @@ class Order
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -98,7 +98,7 @@ class Order
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 

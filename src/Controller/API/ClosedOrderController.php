@@ -45,20 +45,19 @@ class ClosedOrderController extends AbstractController
         $jsonContent = $request->getContent();
         // J'ai besoin d'une entité pour faire l'ajout en bdd donc je transforme le json en entité à l'aide du serializer
         // la méthode veut dire ce contenu, tu le transforme en Movie, le contenu de base est du json.
-        dump($jsonContent);
+        
         // mettre un try catch au cas ou le json n'est pas bon
         try {
             $closedOrder = $serializer->deserialize($jsonContent, ClosedOrder::class, 'json');
+            
         } catch (NotEncodableValueException $e) {
             // si je suis ici c'est que le json n'est pas bon
             return $this->json(["error" => "json invalide"], Response::HTTP_BAD_REQUEST);
         }
 
-
-        $closedOrder = $serializer->deserialize($jsonContent, ClosedOrder::class, 'json');
         // je check si mon film contient des erreurs
         $errors = $validator->validate($closedOrder);
-        dd($closedOrder, $errors);
+        
         // est ce qu'il y a au moins une erreur
         if (count($errors) > 0) {
 
