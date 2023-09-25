@@ -2,6 +2,9 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\Order;
+use App\Entity\Table;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,36 +20,32 @@ class UserController extends AbstractController
     {
         $users = $userRepository->findAll();
 
-        return $this->json([$users, Response::HTTP_OK, [], "groups" => "users"]);
+        return $this->json($users, Response::HTTP_OK, [], ["groups" => "users"]);
     }
-    /**
-     * @Route("/api/orders/{id}/users", name="app_api_user_showByOrder", methods={"GET"})
-     */
-    public function showByOrder(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/Api/UserController.php',
-        ]);
-    }
-    /**
-     * @Route("/api/tables/{id}/users", name="app_api_user_showByTable", methods={"GET"})
-     */
-    public function showByTable(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/Api/UserController.php',
-        ]);
-    }
+
     /**
      * @Route("/api/users/{id}", name="app_api_user_show", methods={"GET"})
      */
-    public function show(): JsonResponse
+    public function show(User $user): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/Api/UserController.php',
-        ]);
+        return $this->json($user, Response::HTTP_OK, [], ["groups" => "users"]);
+    }
+
+    /**
+     * @Route("/api/orders/{id}/users", name="app_api_user_showByOrder", methods={"GET"})
+     */
+    public function showByOrder(Order $order): JsonResponse
+    {
+        $user = $order->getUser();
+        return $this->json($user, Response::HTTP_OK, [], ["groups" => "users"]);
+    }
+
+    /**
+     * @Route("/api/tables/{id}/users", name="app_api_user_showByTable", methods={"GET"})
+     */
+    public function showByTable(Table $table): JsonResponse
+    {
+        $user = $table->getRelatedOrder()->getUser();
+        return $this->json($user, Response::HTTP_OK, [], ["groups" => "users"]);
     }
 }
