@@ -28,7 +28,7 @@ class Order
      * @ORM\Column(type="integer", options={"default"=0, "unsigned"=true})
      * @Groups({"orders"})
      */
-    private $status;
+    private $status = 0;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -77,6 +77,17 @@ class Order
         return $this->status;
     }
 
+    /**
+     * @ORM\PrePersist
+     */
+    public function setDefaultStatus(): self
+    {
+        if ($this->status === null) {
+            $this->status = 0;
+        }
+        return $this;
+    }
+
     public function setStatus(int $status): self
     {
         $this->status = $status;
@@ -92,7 +103,7 @@ class Order
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -107,7 +118,7 @@ class Order
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 
