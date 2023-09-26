@@ -35,7 +35,7 @@ class OrderController extends AbstractController
     public function list(OrderRepository $OrderRepository): JsonResponse
     {
         // Récupère toutes les tables
-        $orders = $OrderRepository->findAll();
+        $orders = $OrderRepository->findAllByStatusOne();
 
         return $this->json($orders, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
@@ -204,6 +204,14 @@ class OrderController extends AbstractController
      */
     public function modifyStatus(int $id, OrderRepository $orderRepository)
     {
-
+        $order = $orderRepository->find($id);
+        if (!$order) {
+            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
+        } elseif ($order->getStatus() == 1) {
+            $order->setStatus(2);
+            return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN, ["Location" => $this->generateUrl("app_api_order_list")], ["groups" => "orders"]);
+        }
     }
+
+    
 }

@@ -44,6 +44,11 @@ class OrderItem
      */
     private $relatedOrder;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default"=false})
+     */
+    private $sent = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +98,18 @@ class OrderItem
     public function setRelatedOrder(?Order $relatedOrder): self
     {
         $this->relatedOrder = $relatedOrder;
+
+        return $this;
+    }
+
+    public function isSent(): ?bool
+    {
+        return $this->sent;
+    }
+
+    public function setSent(bool $sent): self
+    {
+        $this->sent = $sent;
 
         return $this;
     }
