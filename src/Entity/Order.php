@@ -43,7 +43,7 @@ class Order
     private $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="relatedOrder", orphanRemoval=true, cascade={"persist"})
      * @Groups({"orders"})
      */
     private $orderItems;
@@ -123,7 +123,7 @@ class Order
     {
         if (!$this->orderItems->contains($orderItem)) {
             $this->orderItems[] = $orderItem;
-            $orderItem->setOrder($this);
+            $orderItem->setRelatedOrder($this);
         }
 
         return $this;
@@ -133,8 +133,8 @@ class Order
     {
         if ($this->orderItems->removeElement($orderItem)) {
             // set the owning side to null (unless already changed)
-            if ($orderItem->getOrder() === $this) {
-                $orderItem->setOrder(null);
+            if ($orderItem->getRelatedOrder() === $this) {
+                $orderItem->setRelatedOrder(null);
             }
         }
 

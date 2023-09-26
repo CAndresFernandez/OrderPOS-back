@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
@@ -14,22 +15,26 @@ class OrderItem
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"orders"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
+     * @Groups({"orders"})
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"orders"})
      */
     private $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity=Item::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"orders"})
      */
     private $item;
 
@@ -80,12 +85,12 @@ class OrderItem
         return $this;
     }
 
-    public function getOrder(): ?Order
+    public function getRelatedOrder(): ?Order
     {
         return $this->relatedOrder;
     }
 
-    public function setOrder(?Order $relatedOrder): self
+    public function setRelatedOrder(?Order $relatedOrder): self
     {
         $this->relatedOrder = $relatedOrder;
 
