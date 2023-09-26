@@ -9,6 +9,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ItemRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Item
 {
@@ -121,9 +122,12 @@ class Item
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt() : self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }

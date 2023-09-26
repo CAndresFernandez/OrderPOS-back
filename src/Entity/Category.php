@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\Collection;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Category
 {
@@ -107,9 +109,12 @@ class Category
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt) : self
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAt() : self
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -119,9 +124,12 @@ class Category
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt) : self
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAt() : self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new DateTimeImmutable();
 
         return $this;
     }
@@ -129,7 +137,7 @@ class Category
     /**
      * @return Collection<int, Item>
      */
-    public function getItems() : Collection
+    public function getItems(): Collection
     {
         return $this->items;
     }
