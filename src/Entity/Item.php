@@ -16,13 +16,13 @@ class Item
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"items"})
+     * @Groups({"items", "orders"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"items"})
+     * @Groups({"items", "orders"})
      */
     private $name;
 

@@ -2,7 +2,9 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Item;
 use App\Entity\Order;
+use App\Entity\OrderItem;
 use App\Entity\Table;
 use App\Entity\User;
 use App\Repository\OrderRepository;
@@ -84,7 +86,7 @@ class OrderController extends AbstractController
         // Récupère un utilisateur grace à l'id
         $users = $userRepository->find($id);
 
-        // Message d'ereur si la table n'existe pas
+        // Message d'erreur si la table n'existe pas
         if (!$users) {
             return $this->json(['message' => 'Utilisateur non trouvé.'], Response::HTTP_NOT_FOUND);
         }
@@ -140,5 +142,68 @@ class OrderController extends AbstractController
         // préférence perso : je retourne l'order crée
         // norme rest : 201, Location avec le lien de la ressource
         return $this->json($order, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_api_order_list")], ["groups" => "orders"]);
+    }
+
+    /**
+     * @Route("/api/orders/{id}", name="app_api_order_addOrderItem", methods={"PUT"})
+     * @param int $id the id of the order to modify
+     */
+    public function addItemToOrder(int $id, SerializerInterface $serializer, ValidatorInterface $validator, OrderRepository $orderRepository, Request $request): JsonResponse
+    {
+        $order = $orderRepository->find($id);
+
+        if (!$order) {
+            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
+        } elseif ($order->getStatus() > 1) {
+            return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $newOrderItems = [];
+
+        foreach ($data as $orderItem) {
+            $newItem = json_encode($orderItem);
+            $newOrderItem = $serializer->deserialize($newItem, OrderItem::class, 'json', [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['item'],
+            ]);
+            $item = $this->em->getRepository(Item::class)->find($orderItem['item']);
+            $newOrderItem->setRelatedOrder($order);
+            $newOrderItem->setItem($item);
+            $newOrderItems[] = $newOrderItem;
+        }
+
+        foreach ($newOrderItems as $newOrderItem) {
+            $order->addOrderItem($newOrderItem);
+        }
+
+        // je check si mon order contient des erreurs
+        $errors = $validator->validate($order);
+
+        // est ce qu'il y a au moins une erreur
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                // je me crée un tableau avec les erreurs en valeur et les champs concernés en index
+                $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
+            }
+
+            return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($order->getStatus() === 0) {
+            $order->setStatus(1);
+        }
+
+        $this->em->persist($order);
+        $this->em->flush();
+
+        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
+    }
+
+    /**
+     * @Route("/api/orders/{id}", name="app_api_order_modifyStatus", methods={"PUT"})
+     */
+    public function modifyStatus(int $id, OrderRepository $orderRepository)
+    {
+
     }
 }

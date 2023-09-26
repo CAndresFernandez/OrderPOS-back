@@ -114,7 +114,7 @@ class AppFixtures extends Fixture
         for ($o = 1; $o <= 13; $o++) {
             $order = new Order();
             $order->setStatus($faker->numberBetween(0, 3));
-            $order->setTable($tableList[$o - 1]);
+            $order->setRelatedTable($tableList[$o - 1]);
             $order->setUser($userList[rand(1, 4)]);
             $order->setCreatedAt(new DateTimeImmutable());
             $orderList[] = $order;
