@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Category List
+{% endblock %}
+
+{% block body %}
+  <div>
+    <h1>Category List</h1>
+    <button type="button" onclick="window.location.href='{{ path('app_back_category_new') }}';" class="btn btn-success bi bi-plus-lg"></button>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Menu Position</th>
+        <th>Active</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+        <tr>
+          <td>{{ category.id }}</td>
+          <td>{{ category.name }}</td>
+          <td>{{ category.menuPosition }}</td>
+          <td>{{ category.active ? 'Yes' : 'No' }}</td>
+          <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+          <td>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+          <td>
+            <button type="button" onclick="window.location.href='{{ path('app_back_category_show', { id: category.id }) }}';" class="btn btn-primary btn-sm bi bi-list"></button>
+            <button type="button" onclick="window.location.href='{{ path('app_back_category_edit', { id: category.id }) }}';" class="btn btn-warning btn-sm bi bi-pencil-square"></button>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="7">no records found</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
