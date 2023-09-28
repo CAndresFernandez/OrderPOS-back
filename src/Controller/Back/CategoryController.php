@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/", name="app_back_category_index", methods={"GET"})
+     * @Route("/", name="app_back_category_list", methods={"GET"})
      */
     public function index(CategoryRepository $categoryRepository): Response
     {
@@ -28,7 +28,7 @@ class CategoryController extends AbstractController
     /**
      * @Route("/new", name="app_back_category_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, CategoryRepository $categoryRepository): Response
+    public function new (Request $request, CategoryRepository $categoryRepository): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -81,7 +81,7 @@ class CategoryController extends AbstractController
      */
     public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->request->get('_token'))) {
             $categoryRepository->remove($category, true);
         }
 
