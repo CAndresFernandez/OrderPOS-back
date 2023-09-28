@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Table
+{% endblock %}
+
+{% block body %}
+  <h1>Table</h1>
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Number</th>
+        <td>{{ table.number }}</td>
+      </tr>
+      <tr>
+        <th>Covers</th>
+        <td>{{ table.covers }}</td>
+      </tr>
+      <tr>
+        <th>Active</th>
+        <td>{{ table.active ? 'Yes' : 'No' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <a href="{{ path('app_back_table_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2">Back to list</button></a>
+
+  <a href="{{ path('app_back_table_edit', { id: table.id }) }}"><button type="button" class="btn btn-sm btn-warning mx-1 mb-2">Edit</button></a>
+
+  {{ include('back/table/_delete_form.html.twig') }}
+{% endblock %}
