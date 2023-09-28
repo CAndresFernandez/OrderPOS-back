@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Table list
+{% endblock %}
+
+{% block body %}
+  <h1>Table List</h1>
+  <a href="{{ path('app_back_table_new') }}"><button type="button" class="btn btn-success bi bi-plus-lg"></button></a>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Number</th>
+        <th>Covers</th>
+        <th>Active</th>
+        <th>CreatedAt</th>
+        <th>UpdatedAt</th>
+        <th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for table in tables %}
+        <tr>
+          <td>{{ table.id }}</td>
+          <td>{{ table.number }}</td>
+          <td>{{ table.covers }}</td>
+          <td>{{ table.active ? 'Yes' : 'No' }}</td>
+          <td>{{ table.createdAt ? table.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+          <td>{{ table.updatedAt ? table.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+          <td>
+            <a href="{{ path('app_back_table_show', { id: table.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_table_edit', { id: table.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="7">no records found</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
