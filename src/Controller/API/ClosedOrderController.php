@@ -2,8 +2,11 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Order;
 use App\Entity\ClosedOrder;
+use App\Repository\ItemRepository;
 use App\Repository\ClosedOrderRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +23,7 @@ class ClosedOrderController extends AbstractController
      */
     public function show(ClosedOrder $closedOrder): JsonResponse
     {
-        // on retour les closedOrders en json
+        // on retourne les closedOrders en json
         return $this->json($closedOrder, Response::HTTP_OK, [], ["groups" => "closed"]);
     }
 
@@ -29,7 +32,7 @@ class ClosedOrderController extends AbstractController
      */
     public function list(ClosedOrderRepository $closedOrderRepository): JsonResponse
     {
-        //  récupérer les categories
+        //  récupérer les closedOrders
         $closedOrders = $closedOrderRepository->findAll();
 
         // on retour les catégories en json
@@ -37,43 +40,47 @@ class ClosedOrderController extends AbstractController
     }
 
     /**
-     * @Route("/api/closed/new", name="app_api_closed_add", methods={"POST"})
+     * @Route("/api/closed/orders{id}", name="app_api_closed_add", methods={"POST"})
      */
-    public function add(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, ClosedOrderRepository $closedOrderRepository): JsonResponse
+    public function add(Order $order, ClosedOrderRepository $closedOrderRepository, ItemRepository $itemRepository, UserRepository $userRepository, ValidatorInterface $validator): JsonResponse
     {
-        // ICI je récupère le contenu de la requête à ce stade c'est du json 
-        $jsonContent = $request->getContent();
-        // J'ai besoin d'une entité pour faire l'ajout en bdd donc je transforme le json en entité à l'aide du serializer
-        // la méthode veut dire ce contenu, tu le transforme en Movie, le contenu de base est du json.
-        
-        // mettre un try catch au cas ou le json n'est pas bon
-        try {
-            $closedOrder = $serializer->deserialize($jsonContent, ClosedOrder::class, 'json');
-            
-        } catch (NotEncodableValueException $e) {
-            // si je suis ici c'est que le json n'est pas bon
-            return $this->json(["error" => "json invalide"], Response::HTTP_BAD_REQUEST);
+        $closedOrder = new ClosedOrder;
+        $total = 0;
+        $count = 0;
+        $closedOrderItem = [];
+        foreach ($order->getOrderItems() as $orderItem) {
+            $item = $itemRepository->find($orderItem->getItem()->getId());
+            $totalOrderItem = $item->getPrice() * $orderItem->getQuantity();
+            $total += $totalOrderItem;
+            $count += $orderItem->getQuantity();
+            $currentOrderItem = [
+                "name" => $item->getName(),
+                "quantity" => $orderItem->getQuantity(),
+                "price" => $item->getPrice(),
+                "total" => $totalOrderItem
+            ];
+            $closedOrderItem[] = $currentOrderItem;
         }
 
-        // je check si mon film contient des erreurs
-        $errors = $validator->validate($closedOrder);
-        
-        // est ce qu'il y a au moins une erreur
-        if (count($errors) > 0) {
+        $closedOrder->setItems($closedOrderItem);
+        $closedOrder->setTotal($total);
+        $closedOrder->setCount($count);
+        $closedOrder->setUserId($userRepository->find($order->getUser()->getId())->getFirstname());
+        $closedOrder->setPaid(true);
 
+        $errors = $validator->validate($closedOrder);
+        if (count($errors) > 0) {
             foreach ($errors as $error) {
                 // je me crée un tableau avec les erreurs en valeur et les champs concernés en index
                 $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
             }
-
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         // ! j'arrive je sais que mes constraints sont bien passés
         $closedOrderRepository->add($closedOrder, true);
 
-        // on retour les films en json
-        // préférence perso : je retourne le film crée
+        // on retourne le closedOrder créé en json
         // norme rest : 201, Location avec le lien de la ressource
         return $this->json($closedOrder, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_api_closed_show", ["id" => $closedOrder->getId()])]);
     }
