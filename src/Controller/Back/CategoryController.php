@@ -18,9 +18,9 @@ class CategoryController extends AbstractController
     /**
      * @Route("/", name="app_back_category_list", methods={"GET"})
      */
-    public function index(CategoryRepository $categoryRepository): Response
+    public function list(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('back/category/index.html.twig', [
+        return $this->render('back/category/list.html.twig', [
             'categories' => $categoryRepository->findAll(),
         ]);
     }
@@ -37,7 +37,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->add($category, true);
 
-            return $this->redirectToRoute('app_back_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_category_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/new.html.twig', [
@@ -67,7 +67,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->add($category, true);
 
-            return $this->redirectToRoute('app_back_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_category_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/edit.html.twig', [
@@ -85,6 +85,6 @@ class CategoryController extends AbstractController
             $categoryRepository->remove($category, true);
         }
 
-        return $this->redirectToRoute('app_back_category_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_back_category_list', [], Response::HTTP_SEE_OTHER);
     }
 }
