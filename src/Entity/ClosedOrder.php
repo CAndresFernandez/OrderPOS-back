@@ -62,8 +62,6 @@ class ClosedOrder
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"closed"})
-     * @Assert\NotBlank
-     * @Assert\DateTime
      */
     private $createdAt;
 

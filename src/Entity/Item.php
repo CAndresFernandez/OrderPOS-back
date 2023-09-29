@@ -54,15 +54,12 @@ class Item
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"items"})
-     * @Assert\NotBlank
-     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"items"})
-     * @Assert\DateTime
      */
     private $updatedAt;
 

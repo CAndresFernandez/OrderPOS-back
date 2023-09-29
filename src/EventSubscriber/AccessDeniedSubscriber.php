@@ -29,6 +29,7 @@ class AccessDeniedSubscriber implements EventSubscriberInterface
         //     'error' => $event->getThrowable()->getStatusCode(),
         //     'message' => $event->getThrowable()->getMessage(),
         // ]);
+
         $event->setResponse($response);
     }
 
