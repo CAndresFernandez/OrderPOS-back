@@ -16,11 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/", name="app_back_category_index", methods={"GET"})
+     * @Route("/", name="app_back_category_list", methods={"GET"})
      */
-    public function index(CategoryRepository $categoryRepository): Response
+    public function list(CategoryRepository $categoryRepository): Response
     {
-        return $this->render('back/category/index.html.twig', [
+        return $this->render('back/category/list.html.twig', [
             'categories' => $categoryRepository->findAll(),
         ]);
     }
@@ -28,7 +28,7 @@ class CategoryController extends AbstractController
     /**
      * @Route("/new", name="app_back_category_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, CategoryRepository $categoryRepository): Response
+    public function new (Request $request, CategoryRepository $categoryRepository): Response
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -37,7 +37,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->add($category, true);
 
-            return $this->redirectToRoute('app_back_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_category_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/new.html.twig', [
@@ -67,7 +67,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->add($category, true);
 
-            return $this->redirectToRoute('app_back_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_category_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/edit.html.twig', [
@@ -81,10 +81,10 @@ class CategoryController extends AbstractController
      */
     public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->request->get('_token'))) {
             $categoryRepository->remove($category, true);
         }
 
-        return $this->redirectToRoute('app_back_category_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_back_category_list', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -2,29 +2,24 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
+use App\Entity\Table;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CategoryType extends AbstractType
+class TableType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'attr' => [
-                    'placeholder' => 'ex. Pizza, Beer, Desserts',
-                ],
+            ->add('number', IntegerType::class, [
             ])
-            ->add('menu_position', IntegerType::class, [
-                'label' => 'Display position on the menu.',
+            ->add('covers', IntegerType::class, [
             ])
             ->add('active', CheckboxType::class, [
-                'label' => 'Is this an active menu category?',
+                'label' => 'Is this an active table?',
                 'required' => true,
             ])
         ;
@@ -33,7 +28,7 @@ class CategoryType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Category::class,
+            'data_class' => Table::class,
         ]);
     }
 }
