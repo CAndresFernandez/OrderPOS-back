@@ -24,7 +24,6 @@ class ClosedOrder
     /**
      * @ORM\Column(type="json")
      * @Groups({"closed"})
-     * @Assert\Json(message="Invalid Json.")
      * @Assert\NotBlank
      */
     private $items = [];
@@ -138,7 +137,7 @@ class ClosedOrder
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 

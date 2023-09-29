@@ -24,14 +24,14 @@
       {% for closed_order in closed_orders %}
         <tr>
           <td>{{ closed_order.id }}</td>
-          <td>{{ closed_order.items ? closed_order.items|json_encode:'' }}</td>
+          <td>{{ closed_order.items ? closed_order.items|json_encode(constant('JSON_HEX_QUOT')):'' }}</td>
           <td>{{ closed_order.paid ? 'Yes' : 'No' }}</td>
           <td>{{ closed_order.total }}</td>
           <td>{{ closed_order.count }}</td>
           <td>{{ closed_order.userId }}</td>
           <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_closed_order_show', { id: category.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_closed_order_show', { id: closed_order.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
           </td>
         </tr>
       {% else %}

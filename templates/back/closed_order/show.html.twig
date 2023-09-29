@@ -5,42 +5,67 @@
 {% endblock %}
 
 {% block body %}
+
   <h1>Closed Order</h1>
 
-  <table class="table">
+  <table class="table table-hover m-5">
     <tbody>
       <tr>
-        <th>Id</th>
-        <td>{{ closed_order.id }}</td>
+        <th scope="col" class="col-1">Id</th>
+        <td >{{ closed_order.id }}</td>
       </tr>
       <tr>
-        <th>Items</th>
-        <td>{{ closed_order.items ? closed_order.items|json_encode:'' }}</td>
+        <th >Items</th>
+        <td class = "p-0">
+        <table class="table m-0">
+      <tbody>
+      <tr>
+        <td scope="col" class="col-1">#</td>
+        <td scope="col" class="col-1">Name</td>
+        <td scope="col" class="col-1">Quantity</td>
+        <td scope="col" class="col-1">Price</td>
+        <td scope="col" class="col-1">Total</td>
+        <td></td>
+      </tr>
+      {% for item in closed_order.items %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ item.name|e }}</td>
+        <td>{{ item.quantity|e }}</td>
+        <td>{{ item.price|e }}</td>
+        <td>{{ item.total|e }}</td>
+      </tr>        
+        {% endfor %}
+        </tbody>
+  </table>
+  </td>
       </tr>
       <tr>
-        <th>Paid</th>
+        <th >Paid</th>
         <td>{{ closed_order.paid ? 'Yes' : 'No' }}</td>
       </tr>
       <tr>
-        <th>Total</th>
+        <th >Total</th>
         <td>{{ closed_order.total }}</td>
       </tr>
       <tr>
-        <th>Count</th>
+        <th >Count</th>
         <td>{{ closed_order.count }}</td>
       </tr>
       <tr>
-        <th>UserId</th>
+        <th >UserId</th>
         <td>{{ closed_order.userId }}</td>
       </tr>
       <tr>
-        <th>CreatedAt</th>
+        <th >CreatedAt</th>
         <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
       </tr>
     </tbody>
   </table>
 
+
   <a href="{{ path('app_back_closed_order_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2">Back to list</button></a>
 
   {{ include('back/closed_order/_delete_form.html.twig') }}
 {% endblock %}
+
