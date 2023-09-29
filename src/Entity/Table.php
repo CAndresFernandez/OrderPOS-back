@@ -59,7 +59,8 @@ class Table
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=Order::class, mappedBy="relatedTable", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Order::class, mappedBy="relatedTable", cascade={"persist"})
+     * @Groups({"tables"})
      */
     private $relatedOrder;
 
