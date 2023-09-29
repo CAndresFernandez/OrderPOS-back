@@ -24,9 +24,7 @@ class ItemType extends AbstractType
                     'placeholder' => 'ex. Veal Parmigiana',
                 ],
             ])
-            ->add('price', MoneyType::class, [
-                'divisor' => 100,
-            ])
+            ->add('price', MoneyType::class)
             ->add('description', TextareaType::class, [
                 'attr' => [
                     'rows' => 2,
