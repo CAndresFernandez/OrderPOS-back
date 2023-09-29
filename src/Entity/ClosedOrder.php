@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClosedOrderRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ClosedOrderRepository::class)
@@ -23,36 +24,46 @@ class ClosedOrder
     /**
      * @ORM\Column(type="json")
      * @Groups({"closed"})
+     * @Assert\Json(message="Invalid Json.")
+     * @Assert\NotBlank
      */
     private $items = [];
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"closed"})
+     * @Assert\NotBlank
      */
     private $paid;
 
     /**
      * @ORM\Column(type="decimal", precision=7, scale=2, options={"unsigned"=true})
      * @Groups({"closed"})
+     * @Assert\PositiveOrZero
+     * @Assert\NotBlank
      */
     private $total;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @Groups({"closed"})
+     * @Assert\PositiveOrZero
+     * @Assert\NotBlank
      */
     private $count;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"closed"})
+     * @Assert\NotBlank
      */
     private $userId;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"closed"})
+     * @Assert\NotBlank
+     * @Assert\DateTime
      */
     private $createdAt;
 
@@ -129,9 +140,9 @@ class ClosedOrder
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt(): self
+    public function setCreatedAt() : self
     {
-        $this->createdAt =  new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }

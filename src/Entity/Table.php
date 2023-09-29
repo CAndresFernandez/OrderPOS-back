@@ -6,6 +6,7 @@ use App\Repository\TableRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=TableRepository::class)
@@ -25,30 +26,38 @@ class Table
     /**
      * @ORM\Column(type="integer", unique=true)
      * @Groups({"tables"})
+     * @Assert\Positive
+     * @Assert\NotBlank
      */
     private $number;
 
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @Groups({"tables"})
+     * @Assert\Positive
+     * @Assert\NotBlank
      */
     private $covers;
 
     /**
      * @ORM\Column(type="boolean", options={"default"=false})
      * @Groups({"tables"})
+     * @Assert\NotNull
      */
     private $active;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"tables"})
+     * @Assert\NotBlank
+     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"tables"})
+     * @Assert\DateTime
      */
     private $updatedAt;
 

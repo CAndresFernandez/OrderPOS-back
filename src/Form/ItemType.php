@@ -13,7 +13,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ItemType extends AbstractType
 {
@@ -21,7 +20,6 @@ class ItemType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'constraints' => new NotBlank(),
                 'attr' => [
                     'placeholder' => 'ex. Veal Parmigiana',
                 ],
@@ -30,7 +28,6 @@ class ItemType extends AbstractType
                 'divisor' => 100,
             ])
             ->add('description', TextareaType::class, [
-                'constraints' => new NotBlank(),
                 'attr' => [
                     'rows' => 2,
                 ],

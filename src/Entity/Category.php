@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
@@ -26,30 +27,36 @@ class Category
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"items"})
+     * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"items"})
+     * @Assert\PositiveOrZero
      */
     private $menu_position;
 
     /**
      * @ORM\Column(type="boolean", options={"default"=true})
      * @Groups({"items"})
+     * @Assert\NotNull
      */
     private $active;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"items"})
+     * @Assert\NotBlank
+     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"items"})
+     * @Assert\DateTime
      */
     private $updatedAt;
 

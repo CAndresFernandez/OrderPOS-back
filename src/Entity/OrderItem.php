@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
@@ -22,12 +23,15 @@ class OrderItem
     /**
      * @ORM\Column(type="integer", options={"unsigned"=true})
      * @Groups({"orders"})
+     * @Assert\Positive
+     * @Assert\NotBlank
      */
     private $quantity;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"orders"})
+     * @Assert\Length(max=25)
      */
     private $comment;
 
