@@ -17,7 +17,7 @@
         <th>Count</th>
         <th>UserId</th>
         <th>CreatedAt</th>
-        <th>actions</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -31,7 +31,7 @@
           <td>{{ closed_order.userId }}</td>
           <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_closed_order_show', { id: category.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_closed_order_show', { id: closed_order.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
           </td>
         </tr>
       {% else %}
