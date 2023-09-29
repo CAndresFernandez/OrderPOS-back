@@ -8,7 +8,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TableType extends AbstractType
 {
@@ -16,10 +15,8 @@ class TableType extends AbstractType
     {
         $builder
             ->add('number', IntegerType::class, [
-                'constraints' => new NotBlank(),
             ])
             ->add('covers', IntegerType::class, [
-                'constraints' => new NotBlank(),
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'Is this an active table?',
