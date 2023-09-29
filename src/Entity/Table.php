@@ -49,15 +49,12 @@ class Table
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"tables"})
-     * @Assert\NotBlank
-     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"tables"})
-     * @Assert\DateTime
      */
     private $updatedAt;
 

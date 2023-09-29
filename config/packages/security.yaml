@@ -48,7 +48,7 @@ security:
   access_control:
     - { path: ^/back/login, roles: PUBLIC_ACCESS }
     - { path: ^/back/logout, roles: PUBLIC_ACCESS }
-    # - { path: ^/back/users, roles: ROLE_ADMIN }
+    - { path: ^/back/user, roles: ROLE_ADMIN }
     - { path: ^/back, roles: ROLE_MANAGER }
     # ! API
     - { path: ^/api/login, roles: PUBLIC_ACCESS }

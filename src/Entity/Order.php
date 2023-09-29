@@ -36,15 +36,12 @@ class Order
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"orders"})
-     * @Assert\NotBlank
-     * @Assert\DateTime
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"orders"})
-     * @Assert\DateTime
      */
     private $updatedAt;
 
