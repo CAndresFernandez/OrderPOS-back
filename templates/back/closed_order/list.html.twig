@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Closed Order List
+{% endblock %}
+
+{% block body %}
+  <h1>Closed Order List</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Items</th>
+        <th>Paid</th>
+        <th>Total</th>
+        <th>Count</th>
+        <th>UserId</th>
+        <th>CreatedAt</th>
+        <th>actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for closed_order in closed_orders %}
+        <tr>
+          <td>{{ closed_order.id }}</td>
+          <td>{{ closed_order.items ? closed_order.items|json_encode:'' }}</td>
+          <td>{{ closed_order.paid ? 'Yes' : 'No' }}</td>
+          <td>{{ closed_order.total }}</td>
+          <td>{{ closed_order.count }}</td>
+          <td>{{ closed_order.userId }}</td>
+          <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+          <td>
+            <a href="{{ path('app_back_closed_order_show', { id: category.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="8">no records found</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
