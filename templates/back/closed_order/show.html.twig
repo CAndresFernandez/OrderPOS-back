@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Closed Order
+{% endblock %}
+
+{% block body %}
+  <h1>Closed Order</h1>
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <th>Id</th>
+        <td>{{ closed_order.id }}</td>
+      </tr>
+      <tr>
+        <th>Items</th>
+        <td>{{ closed_order.items ? closed_order.items|json_encode:'' }}</td>
+      </tr>
+      <tr>
+        <th>Paid</th>
+        <td>{{ closed_order.paid ? 'Yes' : 'No' }}</td>
+      </tr>
+      <tr>
+        <th>Total</th>
+        <td>{{ closed_order.total }}</td>
+      </tr>
+      <tr>
+        <th>Count</th>
+        <td>{{ closed_order.count }}</td>
+      </tr>
+      <tr>
+        <th>UserId</th>
+        <td>{{ closed_order.userId }}</td>
+      </tr>
+      <tr>
+        <th>CreatedAt</th>
+        <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <a href="{{ path('app_back_closed_order_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2">Back to list</button></a>
+
+  {{ include('back/closed_order/_delete_form.html.twig') }}
+{% endblock %}
