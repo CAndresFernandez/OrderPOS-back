@@ -21,7 +21,7 @@ class Order
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"orders"})
+     * @Groups({"orders", "tables"})
      */
     private $id;
 
@@ -61,7 +61,7 @@ class Order
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="orders")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"users", "orders"})
+     * @Groups({"users", "orders", "tables"})
      */
     private $user;
 
