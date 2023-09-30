@@ -3,11 +3,11 @@
 {% block title %}
   Closed Order List
 {% endblock %}
-
+{% block closedActive %}active{% endblock %}
 {% block body %}
   <h1>Closed Order List</h1>
 
-  <table class="table">
+  <table class="table table-hover">
     <thead>
       <tr>
         <th>Id</th>
@@ -24,19 +24,29 @@
       {% for closed_order in closed_orders %}
         <tr>
           <td>{{ closed_order.id }}</td>
-          <td>{{ closed_order.items ? closed_order.items|json_encode(constant('JSON_HEX_QUOT')):'' }}</td>
-          <td>{{ closed_order.paid ? 'Yes' : 'No' }}</td>
-          <td>{{ closed_order.total }}</td>
+          <td>{% if  closed_order.items  %}
+                {% set allExist = true %}
+                  {% for item in closed_order.items %}
+                    {% if not (item.name is defined and item.quantity is defined and item.price is defined and item.total is defined) %}
+                      {% set allExist = false %}
+                    {% endif %}
+                  {% endfor %}
+                {% if allExist %}
+                {% set count = closed_order.items|length %}
+                  See more details on the next page ({{ count }} items)
+                {% else %}
+                  See more details on the next page
+                {% endif %}
+              {% endif %}
+              </td>
+          <td class="text-{{ closed_order.paid ? 'success' : 'danger' }}">{{ closed_order.total }}€</td>
+          <td>{{ closed_order.paid ? '<i class="text-success bi bi-check2"></i>' : '<i class="text-danger bi bi-x-circle"></i>' }}</td>
           <td>{{ closed_order.count }}</td>
           <td>{{ closed_order.userId }}</td>
           <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_closed_order_show', { id: closed_order.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_closed_order_show', { id: closed_order.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-eye"></button></a>
           </td>
-        </tr>
-      {% else %}
-        <tr>
-          <td colspan="8">no records found</td>
         </tr>
       {% endfor %}
     </tbody>

@@ -3,11 +3,16 @@
 {% block title %}
   User list
 {% endblock %}
-
+{% block userActive %}active{% endblock %}
 {% block body %}
   <div>
     <h1>User List</h1>
-    <a href="{{ path('app_back_user_new') }}"><button type="button" class="btn btn-success bi bi-plus-lg"></button></a>
+    <a href="{{ path('app_back_user_new') }}"><button type="button" class="btn btn-success bi bi-plus-lg" 
+    data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Ajouter une nouvelle catégorie"></button></a>
+    <button type="button" class="btn btn-primary" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-content="Champ texte">
+  Bouton
+</button>
+
   </div>
   <table class="table">
     <thead>
