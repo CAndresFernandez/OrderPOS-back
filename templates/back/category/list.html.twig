@@ -31,7 +31,7 @@
           <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_category_show', { id: category.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_category_show', { id: category.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-eye"></button></a>
             <a href="{{ path('app_back_category_edit', { id: category.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
           </td>
         </tr>
