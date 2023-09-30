@@ -3,10 +3,11 @@
 {% block title %}
   Item List
 {% endblock %}
-
+{% block itemActive %}active{% endblock %}
 {% block body %}
+<div class="container-fluid">
   <h1>Item List</h1>
-  <a href="{{ path('app_back_item_new') }}"><button type="button" class="btn btn-success bi bi-plus-lg"></button></a>
+  <a href="{{ path('app_back_item_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a>
   <table class="table">
     <thead>
       <tr>
@@ -31,7 +32,7 @@
           <td>{{ item.createdAt ? item.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>{{ item.updatedAt ? item.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_item_show', { id: item.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_item_show', { id: item.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
             <a href="{{ path('app_back_item_edit', { id: item.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
           </td>
         </tr>
@@ -42,4 +43,5 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 {% endblock %}

@@ -3,11 +3,12 @@
 {% block title %}
   Category List
 {% endblock %}
-
+{% block categoryActive %}active{% endblock %}
 {% block body %}
+<div class="container-fluid">
   <div>
     <h1>Category List</h1>
-    <a href="{{ path('app_back_category_new') }}"><button type="button" class="btn btn-success bi bi-plus-lg"></button></a>
+    <a href="{{ path('app_back_category_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a>
   </div>
   <table class="table">
     <thead>
@@ -31,7 +32,7 @@
           <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_category_show', { id: category.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
+            <a href="{{ path('app_back_category_show', { id: category.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
             <a href="{{ path('app_back_category_edit', { id: category.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
           </td>
         </tr>
@@ -42,4 +43,5 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 {% endblock %}

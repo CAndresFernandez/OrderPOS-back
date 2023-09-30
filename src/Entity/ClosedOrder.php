@@ -137,7 +137,7 @@ class ClosedOrder
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
