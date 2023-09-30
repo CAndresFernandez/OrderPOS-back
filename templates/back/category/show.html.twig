@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block body %}
+<div class="container-fluid">
   <h1>Category</h1>
 
   <table class="table">
@@ -31,4 +32,5 @@
   {{ include('back/category/_delete_form.html.twig') }}
 
   <a href="{{ path('app_back_category_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2 bi bi-arrow-left-square"> Back to list</button></a>
+</div>
 {% endblock %}

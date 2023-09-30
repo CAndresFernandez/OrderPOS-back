@@ -5,6 +5,7 @@
 {% endblock %}
 {% block closedActive %}active{% endblock %}
 {% block body %}
+<div class="container-fluid">
   <h1>Closed Order List</h1>
 
   <table class="table table-hover">
@@ -45,10 +46,11 @@
           <td>{{ closed_order.userId }}</td>
           <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
           <td>
-            <a href="{{ path('app_back_closed_order_show', { id: closed_order.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-eye"></button></a>
+            <a href="{{ path('app_back_closed_order_show', { id: closed_order.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
+  </div>
 {% endblock %}
