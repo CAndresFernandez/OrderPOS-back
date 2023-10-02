@@ -7,6 +7,7 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Table;
 use App\Entity\User;
+use App\Repository\ItemRepository;
 use App\Repository\OrderRepository;
 use App\Repository\TableRepository;
 use App\Repository\UserRepository;
@@ -149,6 +150,55 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/api/orders/{id}/items/{itemId}", name="app_api_order_addOrderItem", methods={"PUT"})
+     * @param int $id the id of the order to modify
+     * @param int $itemId the id of the item added
+     */
+    public function addItem(int $id, int $itemId, ItemRepository $itemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
+    {
+        //je récupère la commande en cours
+        $order = $orderRepository->find($id);
+
+        if (!$order) {
+            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
+        } elseif ($order->getStatus() > 1) {
+            return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
+        }
+        //je vérifie que l'item existe bien
+        $item = $itemRepository->find($itemId);
+        //je vérifie que la commande en cours existe bien
+        if (!$item) {
+            return $this->json(['message' => 'Item non trouvé.'], Response::HTTP_NOT_FOUND);
+        }
+
+
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
      * @Route("/api/orders/{id}", name="app_api_order_addOrderItem", methods={"PUT"})
      * @param int $id the id of the order to modify
      */
@@ -265,7 +315,7 @@ class OrderController extends AbstractController
         foreach ($updatedOrderItems as $updatedOrderItem) {
             $order->addOrderItem($updatedOrderItem);
         }
-        
+
         // dd($order);
 
         // je check si mon order contient des erreurs
