@@ -43,6 +43,14 @@ class OrderController extends AbstractController
     }
 
     /**
+     * @Route("/api/orders/{id}", name="app_api_order_show", methods={"GET"})
+     */
+    public function show(Order $order): JsonResponse
+    {
+        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
+    }
+
+    /**
      * @Route("/api/orders/{id}", name="app_api_order_delete", methods={"DELETE"})
      */
     public function delete($id, OrderRepository $OrderRepository, EntityManagerInterface $em): JsonResponse
@@ -196,6 +204,8 @@ class OrderController extends AbstractController
 
             //créer un nouvelle orderItem
         }
+
+        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
 
         //je modifie l'orderItem existant ou j'en créé un nouveau
         //je retourne la commande
