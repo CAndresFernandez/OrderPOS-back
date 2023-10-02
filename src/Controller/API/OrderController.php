@@ -3,24 +3,25 @@
 namespace App\Controller\API;
 
 use App\Entity\Item;
-use App\Entity\Order;
-use App\Entity\OrderItem;
-use App\Entity\Table;
 use App\Entity\User;
+use App\Entity\Order;
+use App\Entity\Table;
+use App\Entity\OrderItem;
 use App\Repository\ItemRepository;
+use App\Repository\UserRepository;
 use App\Repository\OrderRepository;
 use App\Repository\TableRepository;
-use App\Repository\UserRepository;
+use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class OrderController extends AbstractController
 {
@@ -150,11 +151,11 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/api/orders/{id}/items/{itemId}", name="app_api_order_addOrderItem", methods={"PUT"})
+     * @Route("/api/orders/{id}/items/{itemId}", name="app_api_order_addOItem", methods={"PUT"})
      * @param int $id the id of the order to modify
      * @param int $itemId the id of the item added
      */
-    public function addItem(int $id, int $itemId, ItemRepository $itemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
+    public function addItem(int $id, int $itemId, ItemRepository $itemRepository, OrderItemRepository $orderItemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
     {
         //je récupère la commande en cours
         $order = $orderRepository->find($id);
@@ -164,15 +165,42 @@ class OrderController extends AbstractController
         } elseif ($order->getStatus() > 1) {
             return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
         }
-        //je vérifie que l'item existe bien
+
+        //je récupère l'item selectionné
         $item = $itemRepository->find($itemId);
-        //je vérifie que la commande en cours existe bien
+        //je vérifie que l'item existe bien
         if (!$item) {
             return $this->json(['message' => 'Item non trouvé.'], Response::HTTP_NOT_FOUND);
         }
+        //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
+        $orderItem = $orderItemRepository->findBy(['item' => $itemId, 'relatedOrder' => $id, 'comment' => null, 'sent' => false]);
+
+        if ($orderItem) {
+            $quantity = 0;
+            foreach ($orderItem as $key => $value) {
+                if ($key) {
+                    $quantity += $value->getQuantity();
+                    $order->removeOrderItem($value);
+                    $orderItemRepository->remove($value, true);
+                }
+            }
+            $orderItem[0]->setQuantity($orderItem[0]->getQuantity() + $quantity + 1);
+            $this->em->persist($order);
+            $this->em->flush();
+        } else {
+            $newOrderItem = new OrderItem();
+            $newOrderItem->setItem($item);
+            $newOrderItem->setQuantity(1);
+            $order->addOrderItem($newOrderItem);
+            $orderItemRepository->add($newOrderItem, true);
+
+            //créer un nouvelle orderItem
+        }
+
+        //je modifie l'orderItem existant ou j'en créé un nouveau
+        //je retourne la commande
 
 
-        
     }
 
 
