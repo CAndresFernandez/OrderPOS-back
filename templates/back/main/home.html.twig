@@ -1,12 +1,13 @@
 {% extends 'base.html.twig' %}
-{% block nav %}
 
-{% endblock %}
 {% block title %}
   Bienvenue sur la home !
 {% endblock %}
+{% block menuActive %}
+  active
+{% endblock %}
 {% block body %}
-<div class="container-fluid">
+{# <div class="container-fluid">
     <h1 class="text-center text-muted fw-bold my-4">O'rder Backoffice</h1>
   <div class="row d-flex align-items-center justify-content-around">
     <div class="col-md-4 col-xl-2 col-lg-4 col-sm-6 col-xs-12 text-center p-3">
@@ -28,5 +29,35 @@
     <a href="{{ path('app_back_logout') }}"><button type="button" class="img-fluid btn btn-sm btn-outline-danger p-4 m-1 fs-2 bi bi-box-arrow-right"> Logout</button></a>
     </div>
   </div>
-</div>
+</div> #}
+  <div class="container-fluid">
+    <h1>Menu</h1>
+    <table class="table">
+      {# <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+        </tr>
+      </thead> #}
+      <tbody>
+        {% for category in categories %}
+            <tr>
+                <th>{{ category.name}}</th>
+                {% for item in category.items %}
+                  {% if item.active == true %}
+                    {# {% if item.category.id == category.id %} #}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.price }}</td>
+                        </tr>
+                    {# {% endif %} #}
+                  {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

@@ -42,16 +42,16 @@ class ItemRepository extends ServiceEntityRepository
 //    /**
 //     * @return Item[] Returns an array of Item objects
 //     */
-//    public function findByExampleField($value): array
+//    public function findAllSortByMenuPosition(): array
 //    {
 //        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('i.id', 'ASC')
-//            ->setMaxResults(10)
+//            ->add('from', 'App\Entity\Item i')
+//         //    ->leftJoin('i.category', 'c')
+//            ->innerJoin('App\Entity\Category', 'c', 'WITH', 'c.id = i.category')
+//            ->where('i.active = true')
+//            ->orderBy('c.menu_position', 'ASC')
 //            ->getQuery()
-//            ->getResult()
-//        ;
+//            ->getResult();
 //    }
 
 //    public function findOneBySomeField($value): ?Item
