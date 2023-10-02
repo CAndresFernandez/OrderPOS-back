@@ -5,6 +5,7 @@ namespace App\Controller\API;
 use App\Entity\ClosedOrder;
 use App\Entity\Order;
 use App\Repository\ClosedOrderRepository;
+use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ class ClosedOrderController extends AbstractController
     /**
      * @Route("/api/orders/{id}/closed", name="app_api_closed_add", methods={"POST"})
      */
-    public function add(Order $order, ClosedOrderRepository $closedOrderRepository, ValidatorInterface $validator): JsonResponse
+    public function add(Order $order, ClosedOrderRepository $closedOrderRepository, OrderRepository $orderRepository, ValidatorInterface $validator): JsonResponse
     {
         $server = $order->getUser();
         $serverName = $server->getFirstname() . ' ' . $server->getLastname();
@@ -76,6 +77,7 @@ class ClosedOrderController extends AbstractController
         }
 
         $closedOrderRepository->add($closedOrder, true);
+        $orderRepository->remove($order, true);
 
         // on retourne le closedOrder créé en json
         // norme rest : 201, Location avec le lien de la ressource
