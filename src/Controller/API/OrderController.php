@@ -159,30 +159,21 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/api/orders/{id}/items/{itemId}", name="app_api_order_addOItem", methods={"PUT"})
+     * @Route("/api/orders/{order}/items/{item}", name="app_api_order_addItem", methods={"PUT"})
      * @param int $id the id of the order to modify
      * @param int $itemId the id of the item added
      */
-    public function addItem(int $id, int $itemId, ItemRepository $itemRepository, OrderItemRepository $orderItemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
+    public function addItem(Order $order, Item $item, ItemRepository $itemRepository, OrderItemRepository $orderItemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
     {
-        //je récupère la commande en cours
-        $order = $orderRepository->find($id);
-
-        if (!$order) {
-            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
-        } elseif ($order->getStatus() > 1) {
+        if ($order->getStatus() > 1) {
             return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
         }
 
-        //je récupère l'item selectionné
-        $item = $itemRepository->find($itemId);
-        //je vérifie que l'item existe bien
-        if (!$item) {
-            return $this->json(['message' => 'Item non trouvé.'], Response::HTTP_NOT_FOUND);
-        }
         //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
-        $orderItem = $orderItemRepository->findBy(['item' => $itemId, 'relatedOrder' => $id, 'comment' => null, 'sent' => false]);
+        $orderItem = $orderItemRepository->findBy(['item' => $item->getId(), 'relatedOrder' => $order->getId(), 'comment' => [null, ""], 'sent' => false]);
 
+
+        //je modifie l'orderItem existant ou j'en créé un nouveau
         if ($orderItem) {
             $quantity = 0;
             foreach ($orderItem as $key => $value) {
@@ -193,27 +184,75 @@ class OrderController extends AbstractController
                 }
             }
             $orderItem[0]->setQuantity($orderItem[0]->getQuantity() + $quantity + 1);
+            $orderItem[0]->setComment(null);
             $this->em->persist($order);
             $this->em->flush();
-        } else {
+        } else { //créer un nouvelle orderItem
             $newOrderItem = new OrderItem();
             $newOrderItem->setItem($item);
             $newOrderItem->setQuantity(1);
             $order->addOrderItem($newOrderItem);
             $orderItemRepository->add($newOrderItem, true);
-
-            //créer un nouvelle orderItem
         }
 
-        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
-
-        //je modifie l'orderItem existant ou j'en créé un nouveau
         //je retourne la commande
-
-
+        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
 
+    /**
+     * @Route("/api/orders/{order}/items/{item}/removeOne", name="app_api_order_removeItem", methods={"PUT"})
+     * @param int $id the id of the order to modify
+     * @param int $itemId the id of the item added
+     */
+    public function removeItem(Order $order, Item $item, ItemRepository $itemRepository, OrderItemRepository $orderItemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
+    {
+        //je récupère la commande en cours
+        // $order = $orderRepository->find($id);
 
+        // if (!$order) {
+        //     return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
+        // } elseif ($order->getStatus() > 1) {
+        //     return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
+        // }
+
+
+        //je récupère l'item selectionné
+        // $item = $itemRepository->find($itemId);
+        //je vérifie que l'item existe bien
+        // if (!$item) {
+        //     return $this->json(['message' => 'Item non trouvé.'], Response::HTTP_NOT_FOUND);
+        // }
+
+        //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
+        $orderItem = $orderItemRepository->findBy(['item' => $item->getId(), 'relatedOrder' => $order->getId(), 'comment' => [null, ""], 'sent' => false]);
+
+
+        //je modifie l'orderItem existant ou j'en créé un nouveau
+        if ($orderItem) {
+            $quantity = 0;
+            foreach ($orderItem as $key => $value) {
+                if ($key) { //s'il existe des doublons je les regroupe et je les supprime
+                    $quantity += $value->getQuantity();
+                    $orderItem[0]->setComment(null);
+                    $order->removeOrderItem($value);
+                    $orderItemRepository->remove($value, true);
+                }
+            }
+            $orderItem[0]->setQuantity($orderItem[0]->getQuantity() + $quantity);
+            $quantityInitial = $orderItem[0]->getQuantity();
+            if ($quantityInitial > 1) {
+                $orderItem[0]->setQuantity($quantityInitial - 1);
+                $this->em->persist($order);
+            } else {
+                $order->removeOrderItem($orderItem[0]);
+                $orderItemRepository->remove($orderItem[0]);
+            }
+            $this->em->flush();
+        } else { //le cas où l'orderItem à supprimer n'existe pas
+
+        }
+        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
+    }
 
 
 
