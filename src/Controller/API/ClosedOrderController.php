@@ -2,19 +2,14 @@
 
 namespace App\Controller\API;
 
-use App\Entity\Order;
 use App\Entity\ClosedOrder;
-use App\Repository\ItemRepository;
+use App\Entity\Order;
 use App\Repository\ClosedOrderRepository;
-use App\Repository\UserRepository;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class ClosedOrderController extends AbstractController
 {
@@ -40,16 +35,19 @@ class ClosedOrderController extends AbstractController
     }
 
     /**
-     * @Route("/api/closed/orders{id}", name="app_api_closed_add", methods={"POST"})
+     * @Route("/api/orders/{id}/closed", name="app_api_closed_add", methods={"POST"})
      */
-    public function add(Order $order, ClosedOrderRepository $closedOrderRepository, ItemRepository $itemRepository, UserRepository $userRepository, ValidatorInterface $validator): JsonResponse
+    public function add(Order $order, ClosedOrderRepository $closedOrderRepository, ValidatorInterface $validator): JsonResponse
     {
+        $server = $order->getUser();
+        $serverName = $server->getFirstname() . ' ' . $server->getLastname();
+
         $closedOrder = new ClosedOrder;
         $total = 0;
         $count = 0;
-        $closedOrderItem = [];
+        $closedOrderItems = [];
         foreach ($order->getOrderItems() as $orderItem) {
-            $item = $itemRepository->find($orderItem->getItem()->getId());
+            $item = $orderItem->getItem();
             $totalOrderItem = $item->getPrice() * $orderItem->getQuantity();
             $total += $totalOrderItem;
             $count += $orderItem->getQuantity();
@@ -57,15 +55,15 @@ class ClosedOrderController extends AbstractController
                 "name" => $item->getName(),
                 "quantity" => $orderItem->getQuantity(),
                 "price" => $item->getPrice(),
-                "total" => $totalOrderItem
+                "total" => $totalOrderItem,
             ];
-            $closedOrderItem[] = $currentOrderItem;
+            $closedOrderItems[] = $currentOrderItem;
         }
 
-        $closedOrder->setItems($closedOrderItem);
+        $closedOrder->setItems($closedOrderItems);
         $closedOrder->setTotal($total);
         $closedOrder->setCount($count);
-        $closedOrder->setUserId($userRepository->find($order->getUser()->getId())->getFirstname());
+        $closedOrder->setUserId($serverName);
         $closedOrder->setPaid(true);
 
         $errors = $validator->validate($closedOrder);
@@ -77,7 +75,6 @@ class ClosedOrderController extends AbstractController
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // ! j'arrive je sais que mes constraints sont bien passés
         $closedOrderRepository->add($closedOrder, true);
 
         // on retourne le closedOrder créé en json
