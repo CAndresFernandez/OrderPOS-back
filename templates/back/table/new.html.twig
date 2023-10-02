@@ -5,9 +5,11 @@
 {% endblock %}
 
 {% block body %}
+<div class="container-fluid">
   <h1>Create new Table</h1>
 
   {{ include('back/table/_form.html.twig') }}
 
-  <a href="{{ path('app_back_table_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2">Back to list</button></a>
+  <a href="{{ path('app_back_table_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2 bi bi-arrow-left-square"> Back to list</button></a>
+</div>
 {% endblock %}

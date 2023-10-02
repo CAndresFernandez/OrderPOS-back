@@ -48,13 +48,13 @@ class OrderController extends AbstractController
     {
 
         // Récupère la table avec l'id correspondant
-        $orders = $OrderRepository->find($id);
+        $order = $OrderRepository->find($id);
 
-        if (!$orders) {
+        if (!$order) {
             return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
         }
 
-        $em->remove($orders);
+        $em->remove($order);
         $em->flush();
 
         return $this->json(['message' => 'Commande supprimée avec succès.'], Response::HTTP_OK);
@@ -66,17 +66,17 @@ class OrderController extends AbstractController
     public function showByTable($id, OrderRepository $OrderRepository, TableRepository $tableRepository): JsonResponse
     {
         // Récupère la table avec l'id correspondant
-        $tables = $tableRepository->find($id);
+        $table = $tableRepository->find($id);
 
-        // Message d'ereur si la table n'existe pas
-        if (!$tables) {
+        // Message d'erreur si la table n'existe pas
+        if (!$table) {
             return $this->json(['message' => 'Table non trouvée.'], Response::HTTP_NOT_FOUND);
         }
 
         // Récupère les order items associés à une table
-        $orders = $OrderRepository->findBy(['relatedTable' => $tables]);
+        $order = $OrderRepository->findBy(['relatedTable' => $table]);
 
-        return $this->json($orders, Response::HTTP_OK, [], ["groups" => "orders"]);
+        return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
 
     /**
@@ -85,15 +85,15 @@ class OrderController extends AbstractController
     public function listByUser($id, OrderRepository $OrderRepository, UserRepository $userRepository): JsonResponse
     {
         // Récupère un utilisateur grace à l'id
-        $users = $userRepository->find($id);
+        $user = $userRepository->find($id);
 
         // Message d'erreur si la table n'existe pas
-        if (!$users) {
+        if (!$user) {
             return $this->json(['message' => 'Utilisateur non trouvé.'], Response::HTTP_NOT_FOUND);
         }
 
         // Récupère les orders associés à un utilisateur
-        $orders = $OrderRepository->findBy(['user' => $users]);
+        $orders = $OrderRepository->findBy(['user' => $user]);
 
         return $this->json($orders, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
@@ -251,10 +251,6 @@ class OrderController extends AbstractController
         // dump($oldOrderItems, $order->getOrderItems()->getValues());
         //je vérifie que les opérations précédentes
 
-
-
-
-
         // je récupère la liste des orderItems de la requête
         $data = json_decode($request->getContent(), true);
         //je créé un tableau vide pour acceuillir la liste actualisée des orderItems
@@ -273,7 +269,7 @@ class OrderController extends AbstractController
         // dd($oldOrderItems, $newOrderItems);
         // je créé une nouvelle liste vide d'orderItems mise à jour
         $updatedOrderItems = [];
-        //je compare l'ancienne et la nouvelle liste d'orderItems 
+        //je compare l'ancienne et la nouvelle liste d'orderItems
         //pour remplir $updatedOrderItems
         $oldOrderItemToSave = []; //je créé un tableau avec les clés des orderItems existants qui seront conservés
         foreach ($newOrderItems as $newOrderItem) {

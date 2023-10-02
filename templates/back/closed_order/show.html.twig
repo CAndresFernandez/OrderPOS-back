@@ -5,42 +5,83 @@
 {% endblock %}
 
 {% block body %}
+<div class="container-fluid">
   <h1>Closed Order</h1>
 
-  <table class="table">
+  <table class="table table-hover">
     <tbody>
       <tr>
-        <th>Id</th>
-        <td>{{ closed_order.id }}</td>
+        <th scope="col" class="col-1">Id</th>
+        <td >{{ closed_order.id }}</td>
       </tr>
       <tr>
-        <th>Items</th>
-        <td>{{ closed_order.items ? closed_order.items|json_encode:'' }}</td>
+        <th >Items</th>
+        {% if  closed_order.items  %}
+                {% set allExist = true %}
+                  {% for item in closed_order.items %}
+                    {% if not (item.name is defined and item.quantity is defined and item.price is defined and item.total is defined) %}
+                      {% set allExist = false %}
+                    {% endif %}
+                  {% endfor %}
+                {% if allExist %}
+                <td class = "p-0">
+                  <table class="table table-hover table-striped m-0">
+                    <tbody>
+                      <tr>
+                        <td scope="col" class="col-1">#</td>
+                        <td scope="col" class="col-1">Name</td>
+                        <td scope="col" class="col-1 ">Quantity</td>
+                        <td scope="col" class="col-1">Price</td>
+                        <td scope="col" class="col-1">Total</td>
+                      </tr>  
+                      {% for item in closed_order.items %}
+                      <tr>
+                        <td {% if  loop.last  %}class = "border-bottom-0"{% endif %}>{{ loop.index }}</td>
+                        <td {% if  loop.last  %}class = "border-bottom-0"{% endif %}>{{ item.name|e }}</td>
+                        <td {% if  loop.last  %}class = "border-bottom-0"{% endif %}>{{ item.quantity|e }}</td>
+                        <td {% if  loop.last  %}class = "border-bottom-0"{% endif %}>{{ item.price|e }}€</td>
+                        <td {% if  loop.last  %}class = "border-bottom-0"{% endif %}>{{ item.total|e }}€</td>        
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>                      
+                {% else %}
+                  <td>{{ closed_order.items|json_encode(constant('JSON_PRETTY_PRINT'))}}
+                {% endif %}
+              {% else %}
+              <td>
+              {% endif %}
+              </td>
       </tr>
       <tr>
-        <th>Paid</th>
-        <td>{{ closed_order.paid ? 'Yes' : 'No' }}</td>
+        <th >Total</th>
+        <td class="text-{{ closed_order.paid ? 'success' : 'danger' }}">{{ closed_order.total }}€</td>
+        
+      </tr>
+        <th >Paid</th>
+        <td>{{ closed_order.paid ? '<i class="text-success bi bi-check2"></i>' : '<i class="text-danger bi bi-x-circle"></i>' }}</td>
+      <tr>
+        
       </tr>
       <tr>
-        <th>Total</th>
-        <td>{{ closed_order.total }}</td>
-      </tr>
-      <tr>
-        <th>Count</th>
+        <th >Count</th>
         <td>{{ closed_order.count }}</td>
       </tr>
       <tr>
-        <th>UserId</th>
+        <th >UserId</th>
         <td>{{ closed_order.userId }}</td>
       </tr>
       <tr>
-        <th>CreatedAt</th>
+        <th >CreatedAt</th>
         <td>{{ closed_order.createdAt ? closed_order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
       </tr>
     </tbody>
   </table>
 
-  <a href="{{ path('app_back_closed_order_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2">Back to list</button></a>
+{{ include('back/closed_order/_delete_form.html.twig') }}
 
-  {{ include('back/closed_order/_delete_form.html.twig') }}
+  <a href="{{ path('app_back_closed_order_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2 bi bi-arrow-left-square"> Back to list</button></a>
+
+</div>
 {% endblock %}
+

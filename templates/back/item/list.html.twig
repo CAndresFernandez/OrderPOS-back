@@ -3,43 +3,47 @@
 {% block title %}
   Item List
 {% endblock %}
-
+{% block itemActive %}
+  active
+{% endblock %}
 {% block body %}
-  <h1>Item List</h1>
-  <a href="{{ path('app_back_item_new') }}"><button type="button" class="btn btn-success bi bi-plus-lg"></button></a>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Description</th>
-        <th>Active</th>
-        <th>CreatedAt</th>
-        <th>UpdatedAt</th>
-        <th>actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in items %}
+  <div class="container-fluid">
+    <h1>Item List</h1>
+    <a href="{{ path('app_back_item_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a>
+    <table class="table">
+      <thead>
         <tr>
-          <td>{{ item.id }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.price }}</td>
-          <td>{{ item.description }}</td>
-          <td>{{ item.active ? 'Yes' : 'No' }}</td>
-          <td>{{ item.createdAt ? item.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-          <td>{{ item.updatedAt ? item.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-          <td>
-            <a href="{{ path('app_back_item_show', { id: item.id }) }}"><button type="button" class="btn btn-primary btn-sm bi bi-list"></button></a>
-            <a href="{{ path('app_back_item_edit', { id: item.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
-          </td>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Active</th>
+          <th>CreatedAt</th>
+          <th>UpdatedAt</th>
+          <th>actions</th>
         </tr>
-      {% else %}
-        <tr>
-          <td colspan="8">no records found</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.active ? 'Yes' : 'No' }}</td>
+            <td>{{ item.createdAt ? item.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            <td>{{ item.updatedAt ? item.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            <td>
+              <a href="{{ path('app_back_item_show', { id: item.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
+              <a href="{{ path('app_back_item_edit', { id: item.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="8">No records found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

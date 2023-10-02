@@ -20,6 +20,7 @@ class ClosedOrderController extends AbstractController
      */
     public function list(ClosedOrderRepository $closedOrderRepository): Response
     {
+
         return $this->render('back/closed_order/list.html.twig', [
             'closed_orders' => $closedOrderRepository->findAll(),
         ]);
@@ -28,7 +29,7 @@ class ClosedOrderController extends AbstractController
     /**
      * @Route("/new", name="app_back_closed_order_new", methods={"GET", "POST"})
      */
-    public function new (Request $request, ClosedOrderRepository $closedOrderRepository): Response
+    public function new(Request $request, ClosedOrderRepository $closedOrderRepository): Response
     {
         $closedOrder = new ClosedOrder();
         $form = $this->createForm(ClosedOrderType::class, $closedOrder);
@@ -52,7 +53,7 @@ class ClosedOrderController extends AbstractController
     public function show(ClosedOrder $closedOrder): Response
     {
         return $this->render('back/closed_order/show.html.twig', [
-            'closed_order' => $closedOrder,
+            'closed_order' => $closedOrder
         ]);
     }
 

@@ -5,11 +5,13 @@
 {% endblock %}
 
 {% block body %}
+<div class="container-fluid">
   <h1>Edit Item</h1>
 
   {{ include('back/item/_form.html.twig', { button_label: 'Update' }) }}
 
-  <a href="{{ path('app_back_item_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2">Back to list</button></a>
-
   {{ include('back/item/_delete_form.html.twig') }}
+
+  <a href="{{ path('app_back_item_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2 bi bi-arrow-left-square"> Back to list</button></a>
+  </div>
 {% endblock %}
