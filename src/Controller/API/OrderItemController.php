@@ -35,7 +35,8 @@ class OrderItemController extends AbstractController
     }
 
     /**
-     * @Route("/api/order-items/remove/{id}", name="app_api_order_item_add", methods={"PUT"})
+     * @Route("/api/order-items/remove/{id}", name="app_api_order_item_remove", methods={"PUT"})
+     * @param int id of the orderItem 
      */
     public function decrement(OrderItem $orderItem): Response
     {
@@ -52,16 +53,10 @@ class OrderItemController extends AbstractController
     }
 
     /**
-     * @Route("/api/order-items/comment/{id}", name="app_api_order_item_add", methods={"PUT"})
+     * @Route("/api/order-items/comment/{id}", name="app_api_order_item_comment", methods={"PUT"})
      */
     public function comment(OrderItem $orderItem, OrderItemRepository $orderItemRepository, Request $request, SerializerInterface $serializer): Response
     {
-        //on part du principe qu'on reçoit un orderItem existant avec ou sans commentaire
-        //on reçoit en Json une quantité et un commentaire
-        //on créé un nouvel orderItem avec la quantité et le commentaire reçu si besoin
-        //sinon on ajuste l'orderItem existant ou on modifie un autre orderItem
-        //on ajuste l'orderItem envoyé en fonction de ces paramètres
-        //on contrôle la cohérence de la demande (quantité, commentaires)
         $order = $orderItem->getRelatedOrder();
         $data = json_decode($request->getContent(), true);
         try {
@@ -70,27 +65,30 @@ class OrderItemController extends AbstractController
                 OrderItem::class,
                 'json'
             );
-            $newQuantity = $newOrderItem->getQuantity();
             $newComment =  $newOrderItem->getComment();
         } catch (NotEncodableValueException $e) {
             return $this->json(["error" => "json invalide"], Response::HTTP_BAD_REQUEST);
         }
-        if ($newQuantity > $orderItem->getQuantity()) {
-            return $this->json(["error" => "quantité erronée"], Response::HTTP_BAD_REQUEST);
-        }
+
+        //Je cherche s'il existe un orderItem avec le meme commentaire
         $existingOrderItem = $orderItemRepository->findBy(['relatedOrder' => $order, 'comment' => $newComment, 'sent' => false]);
-        if ($existingOrderItem) {
-            $quantity = $orderItem[0]->getQuantity();
+
+        if ($existingOrderItem) { //Si j'en trouve un ou plus
+            $quantity = $existingOrderItem[0]->getQuantity(); //je récupère la quantité du premier
             foreach ($existingOrderItem as $key => $value) {
                 if ($key) { //s'il existe des doublons je les regroupe et je les supprime
                     $quantity += $value->getQuantity();
                     $order->removeOrderItem($value);
                     $orderItemRepository->remove($value, true);
                 }
-                $existingOrderItem[0]->setQuantity($quantity + $newQuantity);
+                $existingOrderItem[0]->setQuantity($quantity + $orderItem->getQuantity()); //j'ajoute la quantité de l'orderItem sélectionné
+                // à l'orderItem existant ayant le meme commentaire
+                //je supprime l'orderItem modifié
+                $order->removeOrderItem($orderItem);
+                $orderItemRepository->remove($orderItem, true);
             }
-        } else {
-            $orderItem->setQuantity($orderItem->getQuantity() - 1);
+        } else { //s'il n'existe pas d'order Item avec le commentaire envoyé je modifie l'existant
+            $orderItem->setComment($newComment);
             $this->em->persist($orderItem);
         }
         $this->em->flush();

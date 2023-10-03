@@ -18,8 +18,6 @@
           <th>Roles</th>
           <th>Firstname</th>
           <th>Lastname</th>
-          <th>CreatedAt</th>
-          <th>UpdatedAt</th>
           <th>actions</th>
         </tr>
       </thead>
@@ -27,11 +25,21 @@
         {% for user in users %}
           <tr>
             <td>{{ user.login }}</td>
-            <td>{{ user.roles ? user.roles|json_encode:'' }}</td>
+            <td>
+              <!-- Initialise une variable rolesText comme une chaîne vide -->
+              {% set rolesText = '' %} 
+              <!-- Démarre une boucle pour chaque élément dans le tableau user.roles -->
+              {% for role in user.roles %} 
+                  <!-- Enlève le préfixe "ROLE_" de chaque élément du tableau et stocke le résultat dans roleName -->
+                  {% set roleName = role|replace({'ROLE_': ''}) %} 
+                  <!-- Concatène le rôle (après avoir enlevé le préfixe) à la variable rolesText suivie d'une virgule et d'un espace -->
+                  {% set rolesText = rolesText ~ roleName ~ ', ' %} 
+              {% endfor %}
+              <!-- Affiche les rôles concaténés dans rolesText après avoir supprimé la virgule et l'espace en trop à la fin de la chaîne -->
+              {{ rolesText|trim(', ') }}
+            </td>
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
-            <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             <td>
               <a href="{{ path('app_back_user_show', { id: user.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
               <a href="{{ path('app_back_user_edit', { id: user.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
