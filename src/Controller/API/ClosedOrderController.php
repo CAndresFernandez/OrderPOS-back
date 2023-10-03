@@ -15,15 +15,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ClosedOrderController extends AbstractController
 {
     /**
-     * @Route("api/closed/{id}", name="app_api_closed_show", methods={"GET"})
-     */
-    public function show(ClosedOrder $closedOrder): JsonResponse
-    {
-        // on retourne les closedOrders en json
-        return $this->json($closedOrder, Response::HTTP_OK, [], ["groups" => "closed"]);
-    }
-
-    /**
      * @Route("/api/closed", name="app_api_closed_list")
      */
     public function list(ClosedOrderRepository $closedOrderRepository): JsonResponse
@@ -33,6 +24,15 @@ class ClosedOrderController extends AbstractController
 
         // on retour les catégories en json
         return $this->json($closedOrders, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("api/closed/{id}", name="app_api_closed_show", methods={"GET"})
+     */
+    public function show(ClosedOrder $closedOrder): JsonResponse
+    {
+        // on retourne les closedOrders en json
+        return $this->json($closedOrder, Response::HTTP_OK, [], ["groups" => "closed"]);
     }
 
     /**
