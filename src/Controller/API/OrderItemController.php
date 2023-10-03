@@ -3,14 +3,12 @@
 namespace App\Controller\API;
 
 use App\Entity\OrderItem;
-use App\Repository\OrderRepository;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
@@ -27,6 +25,9 @@ class OrderItemController extends AbstractController
      */
     public function increment(OrderItem $orderItem): Response
     {
+        if ($orderItem->isSent()) {
+            return $this->json(["error" => "article déjà envoyé"], Response::HTTP_BAD_REQUEST);
+        }
         $orderItem->setQuantity($orderItem->getQuantity() + 1);
         $this->em->persist($orderItem);
         $this->em->flush();
@@ -40,6 +41,9 @@ class OrderItemController extends AbstractController
      */
     public function decrement(OrderItem $orderItem): Response
     {
+        if ($orderItem->isSent()) {
+            return $this->json(["error" => "article déjà envoyé"], Response::HTTP_BAD_REQUEST);
+        }
         $order = $orderItem->getRelatedOrder();
         if ($orderItem->getQuantity() === 1) {
             $order->removeOrderItem($orderItem);
@@ -57,8 +61,10 @@ class OrderItemController extends AbstractController
      */
     public function comment(OrderItem $orderItem, OrderItemRepository $orderItemRepository, Request $request, SerializerInterface $serializer): Response
     {
+        if ($orderItem->isSent()) {
+            return $this->json(["error" => "article déjà envoyé"], Response::HTTP_BAD_REQUEST);
+        }
         $order = $orderItem->getRelatedOrder();
-        $data = json_decode($request->getContent(), true);
         try {
             $newOrderItem = $serializer->deserialize(
                 $request->getContent(),
