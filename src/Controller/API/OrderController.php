@@ -3,25 +3,25 @@
 namespace App\Controller\API;
 
 use App\Entity\Item;
-use App\Entity\User;
 use App\Entity\Order;
-use App\Entity\Table;
 use App\Entity\OrderItem;
+use App\Entity\Table;
+use App\Entity\User;
 use App\Repository\ItemRepository;
-use App\Repository\UserRepository;
+use App\Repository\OrderItemRepository;
 use App\Repository\OrderRepository;
 use App\Repository\TableRepository;
-use App\Repository\OrderItemRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class OrderController extends AbstractController
 {
@@ -172,7 +172,6 @@ class OrderController extends AbstractController
         //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
         $orderItem = $orderItemRepository->findBy(['item' => $item->getId(), 'relatedOrder' => $order->getId(), 'comment' => [null, ""], 'sent' => false]);
 
-
         //je modifie l'orderItem existant ou j'en créé un nouveau
         if ($orderItem) {
             $quantity = 0;
@@ -215,7 +214,6 @@ class OrderController extends AbstractController
         //     return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
         // }
 
-
         //je récupère l'item selectionné
         // $item = $itemRepository->find($itemId);
         //je vérifie que l'item existe bien
@@ -225,7 +223,6 @@ class OrderController extends AbstractController
 
         //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
         $orderItem = $orderItemRepository->findBy(['item' => $item->getId(), 'relatedOrder' => $order->getId(), 'comment' => [null, ""], 'sent' => false]);
-
 
         //je modifie l'orderItem existant ou j'en créé un nouveau
         if ($orderItem) {
@@ -252,27 +249,6 @@ class OrderController extends AbstractController
         }
         return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * @Route("/api/orders/{id}", name="app_api_order_addOrderItem", methods={"PUT"})
@@ -416,14 +392,17 @@ class OrderController extends AbstractController
     /**
      * @Route("/api/orders/{id}/status", name="app_api_order_modifyStatus", methods={"PUT"})
      */
-    public function modifyStatus(int $id, OrderRepository $orderRepository)
+    public function modifyStatus(Order $order)
     {
-        $order = $orderRepository->find($id);
-        if (!$order) {
-            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
+        if ($order->getStatus() == 0) {
+            $order->setStatus(1);
         } elseif ($order->getStatus() == 1) {
             $order->setStatus(2);
-            return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN, ["Location" => $this->generateUrl("app_api_order_list")], ["groups" => "orders"]);
+        } elseif ($order->getStatus() == 2) {
+            $order->setStatus(0);
         }
+        $this->em->persist($order);
+        $this->em->flush();
+        return $this->json($order, Response::HTTP_OK, ["Location" => $this->generateUrl("app_api_order_list")], ["groups" => "orders"]);
     }
 }

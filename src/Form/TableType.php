@@ -20,7 +20,7 @@ class TableType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'Is this an active table?',
-                'required' => true,
+                'required' => false,
             ])
         ;
     }
