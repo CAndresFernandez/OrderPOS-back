@@ -31,3 +31,9 @@ php bin/console doctrine:migrations:migrate
 ```cmd
 JWT Passphrase:
 ```
+
+5-b
+
+```cmd
+php bin/console lexik:jwt:generate-keypair
+```
