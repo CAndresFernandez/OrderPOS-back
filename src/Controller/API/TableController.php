@@ -2,6 +2,8 @@
 
 namespace App\Controller\API;
 
+use App\Entity\Table;
+use App\Entity\User;
 use App\Repository\TableRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,31 +28,27 @@ class TableController extends AbstractController
     /**
      * @Route("api/users/{id}/tables", name="app_api_table_listByUser")
      */
-    public function listTablesByUser($id, TableRepository $tableRepository): JsonResponse
+    public function listTablesByUser(User $user, TableRepository $tableRepository): JsonResponse
     {
         //  récupérer les tables
-        $tables = $tableRepository->findAllByUser($id);
+        $tables = $tableRepository->findAllByUser($user);
 
         // on retourne les tables en json
         return $this->json($tables, Response::HTTP_OK, [], ["groups" => "tables"]);
     }
 
     /**
-     * @Route("/api/tables/{id}", name="app_api_table_status", methods={"PUT"})
+     * @Route("/api/tables/{id}/status", name="app_api_table_status", methods={"PUT"})
      */
-    public function toggleStatus(int $id, TableRepository $tableRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function toggleStatus(Table $table, EntityManagerInterface $entityManager): JsonResponse
     {
-        $table = $tableRepository->find($id);
-
-        if (!$table) {
-            return $this->json(['message' => 'Article non trouvé.'], Response::HTTP_NOT_FOUND);
-        }
-
         if ($table->isActive()) {
             $table->setActive(false);
         } else {
             $table->setActive(true);
         }
+
+        $entityManager->persist($table);
         $entityManager->flush();
         return $this->json($table, Response::HTTP_OK, [], ["groups" => "tables"]);
     }
