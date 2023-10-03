@@ -15,22 +15,18 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Name</th>
           <th>Menu Position</th>
+          <th>Name</th>
           <th>Active</th>
-          <th>Created</th>
-          <th>Updated</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for category in categories %}
           <tr>
-            <td>{{ category.name }}</td>
             <td>{{ category.menuPosition }}</td>
+            <td>{{ category.name }}</td>            
             <td>{{ category.active ? 'Yes' : 'No' }}</td>
-            <td>{{ category.createdAt ? category.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            <td>{{ category.updatedAt ? category.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             <td>
               <a href="{{ path('app_back_category_show', { id: category.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
               <a href="{{ path('app_back_category_edit', { id: category.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>

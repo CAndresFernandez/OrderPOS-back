@@ -22,6 +22,14 @@
         <th>Active</th>
         <td>{{ table.active ? 'Yes' : 'No' }}</td>
       </tr>
+      <tr>
+        <th>CreatedAt</th>
+        <td>{{ table.createdAt ? table.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+      </tr>
+      <tr>
+        <th>UpdatedAt</th>
+        <td>{{ table.updatedAt ? table.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+      </tr>
     </tbody>
   </table>
 

@@ -27,7 +27,8 @@ class CategoryType extends AbstractType
             ->add('active', CheckboxType::class, [
                 'label' => 'Is this an active menu category?',
                 'required' => false,
-            ]);
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -13,24 +13,18 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Id</th>
           <th>Number</th>
           <th>Covers</th>
           <th>Active</th>
-          <th>CreatedAt</th>
-          <th>UpdatedAt</th>
           <th>actions</th>
         </tr>
       </thead>
       <tbody>
         {% for table in tables %}
           <tr>
-            <td>{{ table.id }}</td>
             <td>{{ table.number }}</td>
             <td>{{ table.covers }}</td>
             <td>{{ table.active ? 'Yes' : 'No' }}</td>
-            <td>{{ table.createdAt ? table.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            <td>{{ table.updatedAt ? table.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             <td>
               <a href="{{ path('app_back_table_show', { id: table.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
               <a href="{{ path('app_back_table_edit', { id: table.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
