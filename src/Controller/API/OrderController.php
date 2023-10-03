@@ -9,7 +9,6 @@ use App\Entity\Table;
 use App\Entity\User;
 use App\Repository\OrderItemRepository;
 use App\Repository\OrderRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,16 +50,8 @@ class OrderController extends AbstractController
     /**
      * @Route("/api/orders/{id}", name="app_api_order_delete", methods={"DELETE"})
      */
-    public function delete($id, OrderRepository $OrderRepository, EntityManagerInterface $em): JsonResponse
+    public function delete(Order $order, EntityManagerInterface $em): JsonResponse
     {
-
-        // Récupère la table avec l'id correspondant
-        $order = $OrderRepository->find($id);
-
-        if (!$order) {
-            return $this->json(['message' => 'Commande non trouvée.'], Response::HTTP_NOT_FOUND);
-        }
-
         $em->remove($order);
         $em->flush();
 
@@ -70,16 +61,8 @@ class OrderController extends AbstractController
     /**
      * @Route("/api/users/{id}/orders", name="app_api_order_listByUser", methods={"GET"})
      */
-    public function listByUser($id, OrderRepository $OrderRepository, UserRepository $userRepository): JsonResponse
+    public function listByUser(User $user, OrderRepository $OrderRepository): JsonResponse
     {
-        // Récupère un utilisateur grace à l'id
-        $user = $userRepository->find($id);
-
-        // Message d'erreur si la table n'existe pas
-        if (!$user) {
-            return $this->json(['message' => 'Utilisateur non trouvé.'], Response::HTTP_NOT_FOUND);
-        }
-
         // Récupère les orders associés à un utilisateur
         $orders = $OrderRepository->findBy(['user' => $user]);
 
@@ -139,8 +122,8 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/api/orders/{order}/items/{item}", name="app_api_order_addItem", methods={"PUT"})
-     * @param int $id the id of the order to modify
-     * @param int $itemId the id of the item added
+     * @param object $order the order to modify
+     * @param object $item the item to be added
      */
     public function addItem(Order $order, Item $item, OrderItemRepository $orderItemRepository): JsonResponse
     {
@@ -174,7 +157,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/api/orders/{id}/status", name="app_api_order_modifyStatus", methods={"PUT"})
+     * @Route("/api/orders/{id}/status", name="app_api_order_status", methods={"PUT"})
      */
     public function modifyStatus(Order $order)
     {

@@ -5,12 +5,12 @@ namespace App\Controller\API;
 use App\Entity\OrderItem;
 use App\Repository\OrderItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class OrderItemController extends AbstractController
 {
@@ -22,6 +22,7 @@ class OrderItemController extends AbstractController
 
     /**
      * @Route("/api/order-items/add/{id}", name="app_api_order_item_add", methods={"PUT"})
+     * @param object $orderItem the orderItem to modify
      */
     public function increment(OrderItem $orderItem): Response
     {
@@ -37,7 +38,7 @@ class OrderItemController extends AbstractController
 
     /**
      * @Route("/api/order-items/remove/{id}", name="app_api_order_item_remove", methods={"PUT"})
-     * @param int id of the orderItem 
+     * @param object $orderItem the orderItem to modify
      */
     public function decrement(OrderItem $orderItem): Response
     {
@@ -71,7 +72,7 @@ class OrderItemController extends AbstractController
                 OrderItem::class,
                 'json'
             );
-            $newComment =  $newOrderItem->getComment();
+            $newComment = $newOrderItem->getComment();
         } catch (NotEncodableValueException $e) {
             return $this->json(["error" => "json invalide"], Response::HTTP_BAD_REQUEST);
         }
