@@ -38,6 +38,14 @@
         <th>Lastname</th>
         <td>{{ user.lastname }}</td>
       </tr>
+      <tr>
+        <th>CreatedAt</th>
+        <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+      </tr>
+      <tr>
+        <th>UpdatedAt</th>
+        <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+      </tr>
     </tbody>
   </table>
 
