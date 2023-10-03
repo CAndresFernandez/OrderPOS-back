@@ -13,9 +13,9 @@ class AccessDeniedSubscriber implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event): void
     {
         $request = $event->getRequest();
-        if (strpos($request->getPathInfo(), "/back") !== 0) {
-            return;
-        }
+        // if (strpos($request->getPathInfo(), "/back") !== 0) {
+        //     return;
+        // }
 
         $exception = $event->getThrowable();
         if (!$exception instanceof AccessDeniedException && !$exception instanceof AccessDeniedHttpException) {
