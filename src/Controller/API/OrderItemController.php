@@ -3,18 +3,13 @@
 namespace App\Controller\API;
 
 use App\Entity\OrderItem;
-<<<<<<< HEAD
 use App\Service\OrderItemService;
-=======
-use App\Repository\OrderItemRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
->>>>>>> dev
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class OrderItemController extends AbstractController
 {
