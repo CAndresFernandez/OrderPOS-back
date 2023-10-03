@@ -20,8 +20,10 @@ class CategoryController extends AbstractController
      */
     public function list(CategoryRepository $categoryRepository): Response
     {
+        $categories = $categoryRepository->findBy([], ['menu_position' => 'ASC', 'name' => 'ASC']);
+        
         return $this->render('back/category/list.html.twig', [
-            'categories' => $categoryRepository->findAll(),
+            'categories' => $categories,
         ]);
     }
 
