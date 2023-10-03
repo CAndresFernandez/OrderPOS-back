@@ -403,6 +403,6 @@ class OrderController extends AbstractController
         }
         $this->em->persist($order);
         $this->em->flush();
-        return $this->json($order, Response::HTTP_OK, ["Location" => $this->generateUrl("app_api_order_list")], ["groups" => "orders"]);
+        return $this->json($order, Response::HTTP_OK, ["Location" => $this->generateUrl("app_api_order_show", ['id' => $order->getId()])], ["groups" => "orders"]);
     }
 }
