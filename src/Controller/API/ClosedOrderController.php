@@ -40,6 +40,7 @@ class ClosedOrderController extends AbstractController
      */
     public function add(Order $order, ClosedOrderRepository $closedOrderRepository, OrderRepository $orderRepository, ValidatorInterface $validator): JsonResponse
     {
+        $orderItems = $order->getOrderItems();
         $server = $order->getUser();
         $serverName = $server->getFirstname() . ' ' . $server->getLastname();
 
@@ -47,7 +48,10 @@ class ClosedOrderController extends AbstractController
         $total = 0;
         $count = 0;
         $closedOrderItems = [];
-        foreach ($order->getOrderItems() as $orderItem) {
+        foreach ($orderItems as $orderItem) {
+            if (!$orderItem->isSent()) {
+                return $this->json(['message' => 'Merci de vérifier que tous les articles de votre commande ont bien été envoyés avant d\'éditer l\'addition.'], Response::HTTP_FORBIDDEN, ["Location" => $this->generateUrl("app_api_order_show", ["id" => $order->getId()])]);
+            }
             $item = $orderItem->getItem();
             $totalOrderItem = $item->getPrice() * $orderItem->getQuantity();
             $total += $totalOrderItem;
