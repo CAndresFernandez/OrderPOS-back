@@ -229,7 +229,7 @@ class OrderController extends AbstractController
 
         //je modifie l'orderItem existant ou j'en créé un nouveau
         if ($orderItem) {
-            $quantity = 0;
+            $quantity = $orderItem[0]->getQuantity();
             foreach ($orderItem as $key => $value) {
                 if ($key) { //s'il existe des doublons je les regroupe et je les supprime
                     $quantity += $value->getQuantity();
@@ -238,10 +238,9 @@ class OrderController extends AbstractController
                     $orderItemRepository->remove($value, true);
                 }
             }
-            $orderItem[0]->setQuantity($orderItem[0]->getQuantity() + $quantity);
-            $quantityInitial = $orderItem[0]->getQuantity();
-            if ($quantityInitial > 1) {
-                $orderItem[0]->setQuantity($quantityInitial - 1);
+            $orderItem[0]->setQuantity($quantity);
+            if ($quantity > 1) {
+                $orderItem[0]->setQuantity($quantity - 1);
                 $this->em->persist($order);
             } else {
                 $order->removeOrderItem($orderItem[0]);

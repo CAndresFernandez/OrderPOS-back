@@ -16,9 +16,9 @@ class CategoryController extends AbstractController
     public function list(CategoryRepository $categoryRepository): JsonResponse
     {
         //  récupérer les categories
-        $categories = $categoryRepository->findAll();
+        $categories = $categoryRepository->findBy(['active' => true]);
 
         // on retour les catégories en json
-        return $this->json($categories, Response::HTTP_OK);
+        return $this->json($categories, Response::HTTP_OK, [], ["groups" => "categories"]);
     }
 }

@@ -20,20 +20,20 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"items"})
+     * @Groups({"items,categories"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"items"})
+     * @Groups({"items,categories"})
      * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"items"})
+     * @Groups({"items,categories"})
      * @Assert\PositiveOrZero
      */
     private $menu_position;
@@ -116,7 +116,7 @@ class Category
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -131,7 +131,7 @@ class Category
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 

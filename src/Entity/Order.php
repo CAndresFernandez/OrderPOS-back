@@ -27,7 +27,7 @@ class Order
 
     /**
      * @ORM\Column(type="integer", options={"default"=0, "unsigned"=true})
-     * @Groups({"orders"})
+     * @Groups({"orders","tables"})
      * @Assert\PositiveOrZero
      * @Assert\NotBlank
      */
@@ -106,7 +106,7 @@ class Order
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -121,7 +121,7 @@ class Order
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 
