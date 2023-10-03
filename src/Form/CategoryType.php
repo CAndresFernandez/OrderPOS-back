@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Category;
+use phpDocumentor\Reflection\PseudoTypes\False_;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -25,9 +26,8 @@ class CategoryType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'Is this an active menu category?',
-                'required' => true,
-            ])
-        ;
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
