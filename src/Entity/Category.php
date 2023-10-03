@@ -116,7 +116,7 @@ class Category
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt(): self
+    public function setCreatedAt() : self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -131,7 +131,7 @@ class Category
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(): self
+    public function setUpdatedAt() : self
     {
         $this->updatedAt = new DateTimeImmutable();
 

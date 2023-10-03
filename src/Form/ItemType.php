@@ -33,7 +33,7 @@ class ItemType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'label' => 'Is this an active menu item?',
-                'required' => true,
+                'required' => false,
             ])
             ->add('category', EntityType::class, [
                 'class' => Category::class,
