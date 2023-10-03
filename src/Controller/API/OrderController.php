@@ -7,7 +7,6 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Table;
 use App\Entity\User;
-use App\Repository\ItemRepository;
 use App\Repository\OrderItemRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
@@ -143,12 +142,8 @@ class OrderController extends AbstractController
      * @param int $id the id of the order to modify
      * @param int $itemId the id of the item added
      */
-    public function addItem(Order $order, Item $item, ItemRepository $itemRepository, OrderItemRepository $orderItemRepository, ValidatorInterface $validator, OrderRepository $orderRepository): JsonResponse
+    public function addItem(Order $order, Item $item, OrderItemRepository $orderItemRepository): JsonResponse
     {
-        if ($order->getStatus() > 1) {
-            return $this->json(['message' => 'Commande déjà envoyée.'], Response::HTTP_FORBIDDEN);
-        }
-
         //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
         $orderItem = $orderItemRepository->findBy(['item' => $item->getId(), 'relatedOrder' => $order->getId(), 'comment' => [null, ""], 'sent' => false]);
 
