@@ -127,8 +127,6 @@ class OrderController extends AbstractController
 
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        // ! j'arrive je sais que mes constraints sont bien passés
         $orderRepository->add($order, true);
 
         // on retour les orders en json
