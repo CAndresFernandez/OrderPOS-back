@@ -2,10 +2,9 @@
 
 namespace App\Controller\Back;
 
-use App\Repository\ItemRepository;
 use App\Repository\CategoryRepository;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/back")
