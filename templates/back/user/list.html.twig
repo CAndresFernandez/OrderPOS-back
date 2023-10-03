@@ -18,8 +18,6 @@
           <th>Roles</th>
           <th>Firstname</th>
           <th>Lastname</th>
-          <th>CreatedAt</th>
-          <th>UpdatedAt</th>
           <th>actions</th>
         </tr>
       </thead>
@@ -42,8 +40,6 @@
             </td>
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
-            <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             <td>
               <a href="{{ path('app_back_user_show', { id: user.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
               <a href="{{ path('app_back_user_edit', { id: user.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
