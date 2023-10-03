@@ -17,14 +17,9 @@ class MainController extends AbstractController
      */
     public function home(CategoryRepository $categoryRepository)
     {
-        // $items = $itemRepository->findAll();
-        // $categories = $categoryRepository->findAll();
-
-        // $itemsToDisplay = $itemRepository->findAllSortByMenuPosition();
         $categoriesToDisplay = $categoryRepository->findBy(['active' => true], ['menu_position' => 'ASC', 'name' => 'ASC']);
 
         return $this->render("back/main/home.html.twig", [
-            // 'items' => $itemsToDisplay,
             'categories' => $categoriesToDisplay,
         ]);
     }

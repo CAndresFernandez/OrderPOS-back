@@ -21,7 +21,7 @@ class ItemController extends AbstractController
     public function list(ItemRepository $itemRepository): Response
     {
         return $this->render('back/item/list.html.twig', [
-            'items' => $itemRepository->findAll(),
+            'items' => $itemRepository->findBy([], ['id' => 'DESC']),
         ]);
     }
 
