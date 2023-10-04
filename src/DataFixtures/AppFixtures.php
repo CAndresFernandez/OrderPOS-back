@@ -120,7 +120,7 @@ class AppFixtures extends Fixture
             $orderList[] = $order;
 
             // ! ORDER items
-            for ($oi = 1; $oi < mt_rand(3, 10); $oi++) {
+            for ($oi = 1; $oi < mt_rand(2, 8); $oi++) {
                 $orderItem = new OrderItem();
                 $orderItem->setQuantity(mt_rand(1, 3));
                 $orderItem->setComment($faker->words(mt_rand(0, 3), true));
