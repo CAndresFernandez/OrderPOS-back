@@ -103,7 +103,7 @@ class AppFixtures extends Fixture
             $item->setPrice($faker->randomFloat(2, 5, 18));
             $item->setDescription($faker->sentence());
             $item->setActive(true);
-            $item->setCategory($categoryList[rand(1, 5)]);
+            $item->setCategory($categoryList[mt_rand(1, 5)]);
             $item->setCreatedAt(new DateTimeImmutable());
             $itemList[] = $item;
             $manager->persist($item);
@@ -111,20 +111,20 @@ class AppFixtures extends Fixture
 
         // ! ORDER
         $orderList = [];
-        for ($o = 1; $o <= 13; $o++) {
+        for ($o = 1; $o <= 6; $o++) {
             $order = new Order();
             $order->setStatus($faker->numberBetween(0, 2));
-            $order->setRelatedTable($tableList[$o - 1]);
-            $order->setUser($userList[rand(1, 4)]);
+            $order->setRelatedTable($tableList[mt_rand(0, 12)]);
+            $order->setUser($userList[mt_rand(1, 4)]);
             $order->setCreatedAt(new DateTimeImmutable());
             $orderList[] = $order;
 
             // ! ORDER items
             for ($oi = 1; $oi < mt_rand(5, 15); $oi++) {
                 $orderItem = new OrderItem();
-                $orderItem->setQuantity(rand(1, 3));
-                $orderItem->setComment($faker->words(rand(0, 3), true));
-                $orderItem->setItem($itemList[rand(0, 19)]);
+                $orderItem->setQuantity(mt_rand(1, 3));
+                $orderItem->setComment($faker->words(mt_rand(0, 3), true));
+                $orderItem->setItem($itemList[mt_rand(0, 19)]);
                 $order->addOrderItem($orderItem);
                 $manager->persist($orderItem);
             }
