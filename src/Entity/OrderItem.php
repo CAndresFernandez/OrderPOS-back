@@ -50,6 +50,7 @@ class OrderItem
 
     /**
      * @ORM\Column(type="boolean", options={"default"=false})
+     * @Groups({"orders"})
      */
     private $sent = false;
 

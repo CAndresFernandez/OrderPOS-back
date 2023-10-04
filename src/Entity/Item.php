@@ -66,7 +66,7 @@ class Item
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="items")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"items"})
+     * @Groups({"items","orders"})
      */
     private $category;
 
@@ -131,7 +131,7 @@ class Item
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -146,7 +146,7 @@ class Item
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 
