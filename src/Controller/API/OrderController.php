@@ -163,6 +163,10 @@ class OrderController extends AbstractController
             $order->setStatus(1);
         } elseif ($order->getStatus() == 1) {
             $order->setStatus(2);
+            $orderItems = $order->getOrderItems();
+            foreach ($orderItems as $orderItem) {
+                $orderItem->setSent(true);
+            }
         } elseif ($order->getStatus() == 2) {
             $order->setStatus(0);
         }
