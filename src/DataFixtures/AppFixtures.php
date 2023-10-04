@@ -111,16 +111,16 @@ class AppFixtures extends Fixture
 
         // ! ORDER
         $orderList = [];
-        for ($o = 1; $o <= 6; $o++) {
+        for ($o = 1; $o <= 7; $o++) {
             $order = new Order();
             $order->setStatus($faker->numberBetween(0, 2));
-            $order->setRelatedTable($tableList[mt_rand(0, 12)]);
+            $order->setRelatedTable($tableList[$o - 1]);
             $order->setUser($userList[mt_rand(1, 4)]);
             $order->setCreatedAt(new DateTimeImmutable());
             $orderList[] = $order;
 
             // ! ORDER items
-            for ($oi = 1; $oi < mt_rand(5, 15); $oi++) {
+            for ($oi = 1; $oi < mt_rand(3, 10); $oi++) {
                 $orderItem = new OrderItem();
                 $orderItem->setQuantity(mt_rand(1, 3));
                 $orderItem->setComment($faker->words(mt_rand(0, 3), true));
