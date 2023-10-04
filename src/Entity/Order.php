@@ -52,7 +52,7 @@ class Order
     private $orderItems;
 
     /**
-     * @ORM\OneToOne(targetEntity=Table::class, inversedBy="relatedOrder", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Table::class, inversedBy="relatedOrder", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"orders"})
      */
@@ -106,7 +106,7 @@ class Order
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt(): self
+    public function setCreatedAt() : self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -121,7 +121,7 @@ class Order
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt(): self
+    public function setUpdatedAt() : self
     {
         $this->updatedAt = new DateTimeImmutable();
 
