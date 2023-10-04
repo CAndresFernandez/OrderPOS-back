@@ -159,11 +159,15 @@ class OrderController extends AbstractController
      */
     public function modifyStatus(Order $order)
     {
+        $orderItems = $order->getOrderItems();
+        if ($orderItems->getValues() == null) {
+            return $this->json(['message' => 'Your order is empty. Please add items to your order before sending it to the kitchen.'], Response::HTTP_FORBIDDEN);
+        }
+
         if ($order->getStatus() == 0) {
             $order->setStatus(1);
         } elseif ($order->getStatus() == 1) {
             $order->setStatus(2);
-            $orderItems = $order->getOrderItems();
             foreach ($orderItems as $orderItem) {
                 $orderItem->setSent(true);
             }
