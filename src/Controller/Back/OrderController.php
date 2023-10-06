@@ -16,11 +16,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class OrderController extends AbstractController
 {
     /**
-     * @Route("/", name="app_back_order_index", methods={"GET"})
+     * @Route("/", name="app_back_order_list", methods={"GET"})
      */
     public function index(OrderRepository $orderRepository): Response
     {
-        return $this->render('back/order/index.html.twig', [
+        return $this->render('back/order/list.html.twig', [
             'orders' => $orderRepository->findAll(),
         ]);
     }
