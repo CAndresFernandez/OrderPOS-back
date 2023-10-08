@@ -1,30 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order index{% endblock %}
-
+{% block title %}Order list{% endblock %}
+{% block orderActive %}
+  active
+{% endblock %}
 {% block body %}
-    <h1>Order index</h1>
+<div class="container-fluid">
+    <h1>Order list</h1>
+    {# <a href="{{ path('app_back_order_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a> #}
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>User</th>
+                <th>Table</th>
+                <th>Covers</th>
                 <th>Status</th>
-                <th>CreatedAt</th>
-                <th>UpdatedAt</th>
+                <th>Statuts</th>
+                <th>Updated At</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for order in orders %}
             <tr>
-                <td>{{ order.id }}</td>
+                <td>{{ order.user.firstname }}</td>
+                <td>{{ order.relatedTable.number }}</td>
+                <td>{{ order.relatedTable.covers }}</td>
+                {# <td>{{ order.orderItems.id }}</td> #}
                 <td>{{ order.status }}</td>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ order.updatedAt ? order.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
-                    <a href="{{ path('app_back_order_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('app_back_order_edit', {'id': order.id}) }}">edit</a>
+                    {% if order.status == 0 %}
+                        En commande
+                    {% elseif order.status == 1 %}
+                        En préparation
+                    {% elseif order.status == 2 %}
+                        En attente de paiement
+                    {% endif %}
+                </td>
+                <td>{{ order.updatedAt ? order.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+
+                <td>
+                <a href="{{ path('app_api_order_status', { id: order.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
+                <a href="{{ path('app_back_order_edit', { id: order.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
                 </td>
             </tr>
         {% else %}
@@ -34,6 +52,5 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_back_order_new') }}">Create new</a>
+</div>
 {% endblock %}

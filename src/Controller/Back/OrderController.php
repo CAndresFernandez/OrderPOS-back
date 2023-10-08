@@ -18,7 +18,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/", name="app_back_order_list", methods={"GET"})
      */
-    public function index(OrderRepository $orderRepository): Response
+    public function list(OrderRepository $orderRepository): Response
     {
         return $this->render('back/order/list.html.twig', [
             'orders' => $orderRepository->findAll(),
@@ -28,23 +28,23 @@ class OrderController extends AbstractController
     /**
      * @Route("/new", name="app_back_order_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, OrderRepository $orderRepository): Response
-    {
-        $order = new Order();
-        $form = $this->createForm(OrderType::class, $order);
-        $form->handleRequest($request);
+    // public function new(Request $request, OrderRepository $orderRepository): Response
+    // {
+    //     $order = new Order();
+    //     $form = $this->createForm(OrderType::class, $order);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $orderRepository->add($order, true);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $orderRepository->add($order, true);
 
-            return $this->redirectToRoute('app_back_order_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_back_order_list', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->renderForm('back/order/new.html.twig', [
-            'order' => $order,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('back/order/new.html.twig', [
+    //         'order' => $order,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     /**
      * @Route("/{id}", name="app_back_order_show", methods={"GET"})
@@ -67,7 +67,7 @@ class OrderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $orderRepository->add($order, true);
 
-            return $this->redirectToRoute('app_back_order_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_back_order_list', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/order/edit.html.twig', [
@@ -85,6 +85,6 @@ class OrderController extends AbstractController
             $orderRepository->remove($order, true);
         }
 
-        return $this->redirectToRoute('app_back_order_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_back_order_list', [], Response::HTTP_SEE_OTHER);
     }
 }
