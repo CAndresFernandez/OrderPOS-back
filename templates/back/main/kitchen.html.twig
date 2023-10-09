@@ -25,12 +25,12 @@
               </tr>
               <tbody>
                 {% for orderItem in order.orderitems %}
-                  <tr>
+                  <tr id="{{ orderItem.id }}">
                     <td>{{ orderItem.item.name }}</td>
-                    <td>{{ orderItem.quantity }}</td>
+                    <td class="quantity">{{ orderItem.quantity }}</td>
                     {% if orderItem.comment != null %}
                       <td>
-                        <em>Comments: {{ orderItem.comment }}</em>
+                        <em class="comment">{{ orderItem.comment }}</em>
                       </td>
                     {% endif %}
                   </tr>
@@ -46,17 +46,53 @@
 
 {% block javascripts %}
   <script>
+    // const eventSource = new EventSource("{{ mercure('http://localhost/apo-Order/projet-8-o-commande-back/public/back/api/*')|escape('js') }}")
+    // eventSource.onmessage = (event) => {
+    //   // Will be called every time an update is published by the server
+    //   console.log(JSON.parse(event.data))
+    // }
     fetch('http://localhost/apo-Order/projet-8-o-commande-back/public/back/discover').then((response) => {
       const hubUrl = response.headers.get('Link').match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
-    
+
       // Append the topic(s) to subscribe as query parameter
       const hub = new URL(hubUrl, window.origin)
-      hub.searchParams.append('topic', 'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/remove/{id}')
       hub.searchParams.append('topic', 'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/add/{id}')
-    
+
       // Subscribe to updates
       const eventSource = new EventSource(hub)
-      eventSource.onmessage = (event) => console.log(event.data)
+      //   const newData = event.data
+      eventSource.onmessage = (event) => {
+
+        const data = JSON.parse(event.data)
+        const id = data.id
+        const quantity = data.quantity
+        const comment = data.comment
+        const trElementToModify = document.querySelector("[id='"+id+"']")
+        if (trElementToModify) {
+            if (trElementToModify.querySelector(".quantity")) {
+                const quantityElement = trElementToModify.querySelector(".quantity")
+                quantityElement.innerHTML = {{ 'quantity' }}
+            } else {
+                newTd = document.createElement("td")
+                newTd.classList.add("quantity")
+                newTd.innerHTML = {{ 'quantity' }}
+                trElementToModify.appendChild(newTd)
+            }
+            if (data.comment !== null) {
+                if (trElementToModify.querySelector(".comment")) {
+                const commentElement = trElementToModify.querySelector(".comment")
+                commentElement.innerHTML = {{ 'comment' }}
+                } else {
+                    newTd = document.createElement("td")
+                    newTd.classList.add("comment")
+                    newTd.innerHTML = {{ 'comment' }}
+                    trElementToModify.appendChild(newTd)
+                }
+            }
+        } else {
+           console.log("need to create a new item")
+        }
+      }
     })
   </script>
 {% endblock %}

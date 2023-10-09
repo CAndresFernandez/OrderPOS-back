@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -31,10 +32,17 @@ class OrderController extends AbstractController
     /**
      * @Route("/api/orders", name="app_api_order_list", methods={"GET"})
      */
-    public function list(OrderRepository $OrderRepository): JsonResponse
+    public function list(OrderRepository $OrderRepository, HubInterface $hub): JsonResponse
     {
         // Récupère toutes les tables
         $orders = $OrderRepository->findAllByStatusOne();
+
+        // $update = new Update(
+        //     'http://localhost/apo-Order/projet-8-o-commande-back/public/api/orders',
+        //     json_encode(['message' => 'well played'])
+        // );
+
+        // $hub->publish($update);
 
         return $this->json($orders, Response::HTTP_OK, [], ["groups" => "orders"]);
     }

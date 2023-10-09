@@ -65,7 +65,7 @@ class MainController extends AbstractController
     public function publish(HubInterface $hub): Response
     {
         $update = new Update(
-            '/kitchen',
+            'http://localhost/apo-Order/projet-8-o-commande-back/public/api/orders',
             json_encode(['message' => 'hello world!'])
         );
 

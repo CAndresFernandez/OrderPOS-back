@@ -4,12 +4,14 @@ namespace App\Controller\API;
 
 use App\Entity\OrderItem;
 use App\Service\OrderItemService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class OrderItemController extends AbstractController
 {
@@ -24,13 +26,24 @@ class OrderItemController extends AbstractController
      * @Route("/api/order-items/add/{id}", name="app_api_order_item_add", methods={"PUT"})
      * @param object $orderItem the orderItem to modify
      */
-    public function increment(OrderItem $orderItem): Response
+    public function increment(OrderItem $orderItem, HubInterface $hub): Response
     {
         if ($orderItem->isSent()) {
             return $this->json(["error" => "article déjà envoyé"], Response::HTTP_BAD_REQUEST);
         }
 
         $order = $this->orderItemService->add($orderItem);
+
+        $update = new Update(
+            'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/add/{id}',
+            json_encode([
+                'id' => $orderItem->getId(),
+                'quantity' => $orderItem->getQuantity(),
+                'comment' => $orderItem->getComment(),
+            ])
+        );
+
+        $hub->publish($update);
 
         return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
