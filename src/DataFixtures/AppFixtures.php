@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
         $roleAdmin->setLogin(99);
         $roleAdmin->setRoles(["ROLE_ADMIN"]);
         $roleAdmin->setPassword($this->passwordHasher->hashPassword($roleAdmin, "2222"));
-        // $roleAdmin->setCreatedAt(new DateTimeImmutable()); // PrePersist in place, not needed
+        // $roleAdmin->setCreatedAt(new DateTimeImmutable());
         $manager->persist($roleAdmin);
 
         // MANAGER
@@ -52,7 +52,7 @@ class AppFixtures extends Fixture
             $roleManager->setLogin($u);
             $roleManager->setRoles(["ROLE_MANAGER"]);
             $roleManager->setPassword($this->passwordHasher->hashPassword($roleManager, "1111"));
-            // $roleManager->setCreatedAt(new DateTimeImmutable()); PrePersist in place, not needed
+            // $roleManager->setCreatedAt(new DateTimeImmutable());
             $manager->persist($roleManager);
         };
 
@@ -65,7 +65,7 @@ class AppFixtures extends Fixture
             $roleUser->setLogin($u);
             $roleUser->setPassword($this->passwordHasher->hashPassword($roleUser, "0000"));
             $roleUser->setRoles(["ROLE_USER"]);
-            // $roleUser->setCreatedAt(new DateTimeImmutable()); PrePersist in place, not needed
+            // $roleUser->setCreatedAt(new DateTimeImmutable());
             $userList[] = $roleUser;
             $manager->persist($roleUser);
         };
@@ -77,7 +77,7 @@ class AppFixtures extends Fixture
             $table->setNumber($t);
             $table->setCovers($faker->numberBetween(2, 4));
             $table->setActive(true);
-            // $table->setCreatedAt(new DateTimeImmutable()); PrePersist in place, not needed
+            // $table->setCreatedAt(new DateTimeImmutable());
             $tableList[] = $table;
             $manager->persist($table);
         }
@@ -89,7 +89,7 @@ class AppFixtures extends Fixture
             $category->setName($provider->itemCategory($c));
             $category->setMenuPosition($c);
             $category->setActive(true);
-            // $category->setCreatedAt(new DateTimeImmutable()); PrePersist in place, not needed
+            // $category->setCreatedAt(new DateTimeImmutable());
             $categoryList[] = $category;
             $manager->persist($category);
         }
@@ -103,7 +103,7 @@ class AppFixtures extends Fixture
             $item->setDescription($faker->sentence());
             $item->setActive(true);
             $item->setCategory($categoryList[mt_rand(1, 5)]);
-            // $item->setCreatedAt(new DateTimeImmutable()); PrePersist in place, not needed
+            // $item->setCreatedAt(new DateTimeImmutable());
             $itemList[] = $item;
             $manager->persist($item);
         }
@@ -115,7 +115,7 @@ class AppFixtures extends Fixture
             $order->setStatus($faker->numberBetween(1, 2));
             $order->setRelatedTable($tableList[$o - 1]);
             $order->setUser($userList[mt_rand(1, 4)]);
-            // $order->setCreatedAt($faker->dateTimeInInterval()); PrePersist in place, not needed
+            // $order->setCreatedAt(new DateTimeImmutable());
             $orderList[] = $order;
 
             // ! ORDER items
