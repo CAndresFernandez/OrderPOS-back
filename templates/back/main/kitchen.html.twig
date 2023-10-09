@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Bienvenue sur la home !
+{% endblock %}
+{% block menuActive %}
+  active
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <h1>Kitchen</h1>
+    {# {% set ordersPerRow = 4 %} #}
+    {# {% set batchedOrders = orders|batch(ordersPerRow) %} #}
+    <div class="row">
+      {% set ordersPerRow = 4 %}
+      {% set batchedOrders = orders|batch(ordersPerRow) %}
+      {% for orderRow in batchedOrders %}
+        {% for order in orderRow %}
+          <div class="col-md-3">
+            <table class="table">
+              <tr>
+                <th>Table {{ order.relatedTable.number }}</th>
+                <th>{{ order.relatedTable.covers }}pp</th>
+                <th>{{ order.createdAt|date('H:i') }}</th>
+              </tr>
+              <tbody>
+                {% for orderItem in order.orderitems %}
+                  <tr>
+                    <td>{{ orderItem.item.name }}</td>
+                    <td>{{ orderItem.quantity }}</td>
+                    {% if orderItem.comment != null %}
+                      <td>
+                        <em>Comments: {{ orderItem.comment }}</em>
+                      </td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    fetch('http://localhost/apo-Order/projet-8-o-commande-back/public/back/discover').then((response) => {
+      const hubUrl = response.headers.get('Link').match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
+    
+      // Append the topic(s) to subscribe as query parameter
+      const hub = new URL(hubUrl, window.origin)
+      hub.searchParams.append('topic', 'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/remove/{id}')
+      hub.searchParams.append('topic', 'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/add/{id}')
+    
+      // Subscribe to updates
+      const eventSource = new EventSource(hub)
+      eventSource.onmessage = (event) => console.log(event.data)
+    })
+  </script>
+{% endblock %}
