@@ -9,7 +9,6 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Table;
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -42,7 +41,7 @@ class AppFixtures extends Fixture
         $roleAdmin->setLogin(99);
         $roleAdmin->setRoles(["ROLE_ADMIN"]);
         $roleAdmin->setPassword($this->passwordHasher->hashPassword($roleAdmin, "2222"));
-        $roleAdmin->setCreatedAt(new DateTimeImmutable());
+        // $roleAdmin->setCreatedAt(new DateTimeImmutable());
         $manager->persist($roleAdmin);
 
         // MANAGER
@@ -53,7 +52,7 @@ class AppFixtures extends Fixture
             $roleManager->setLogin($u);
             $roleManager->setRoles(["ROLE_MANAGER"]);
             $roleManager->setPassword($this->passwordHasher->hashPassword($roleManager, "1111"));
-            $roleManager->setCreatedAt(new DateTimeImmutable());
+            // $roleManager->setCreatedAt(new DateTimeImmutable());
             $manager->persist($roleManager);
         };
 
@@ -66,19 +65,19 @@ class AppFixtures extends Fixture
             $roleUser->setLogin($u);
             $roleUser->setPassword($this->passwordHasher->hashPassword($roleUser, "0000"));
             $roleUser->setRoles(["ROLE_USER"]);
-            $roleUser->setCreatedAt(new DateTimeImmutable());
+            // $roleUser->setCreatedAt(new DateTimeImmutable());
             $userList[] = $roleUser;
             $manager->persist($roleUser);
         };
 
         // ! TABLE
         $tableList = [];
-        for ($t = 1; $t <= 13; $t++) {
+        for ($t = 1; $t <= 20; $t++) {
             $table = new Table();
             $table->setNumber($t);
             $table->setCovers($faker->numberBetween(2, 4));
             $table->setActive(true);
-            $table->setCreatedAt(new DateTimeImmutable());
+            // $table->setCreatedAt(new DateTimeImmutable());
             $tableList[] = $table;
             $manager->persist($table);
         }
@@ -90,7 +89,7 @@ class AppFixtures extends Fixture
             $category->setName($provider->itemCategory($c));
             $category->setMenuPosition($c);
             $category->setActive(true);
-            $category->setCreatedAt(new DateTimeImmutable());
+            // $category->setCreatedAt(new DateTimeImmutable());
             $categoryList[] = $category;
             $manager->persist($category);
         }
@@ -104,19 +103,19 @@ class AppFixtures extends Fixture
             $item->setDescription($faker->sentence());
             $item->setActive(true);
             $item->setCategory($categoryList[mt_rand(1, 5)]);
-            $item->setCreatedAt(new DateTimeImmutable());
+            // $item->setCreatedAt(new DateTimeImmutable());
             $itemList[] = $item;
             $manager->persist($item);
         }
 
         // ! ORDER
         $orderList = [];
-        for ($o = 1; $o <= 7; $o++) {
+        for ($o = 1; $o <= 12; $o++) {
             $order = new Order();
-            $order->setStatus($faker->numberBetween(0, 2));
+            $order->setStatus($faker->numberBetween(1, 2));
             $order->setRelatedTable($tableList[$o - 1]);
             $order->setUser($userList[mt_rand(1, 4)]);
-            $order->setCreatedAt(new DateTimeImmutable());
+            // $order->setCreatedAt(new DateTimeImmutable());
             $orderList[] = $order;
 
             // ! ORDER items
