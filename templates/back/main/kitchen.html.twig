@@ -51,7 +51,7 @@
     //   // Will be called every time an update is published by the server
     //   console.log(JSON.parse(event.data))
     // }
-    fetch($_SERVER['BASE_URL'].'/back/discover').then((response) => {
+    fetch($_SERVER['BASE_URL_BACK'] . '/discover').then((response) => {
       const hubUrl = response.headers.get('Link').match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
 
       // Append the topic(s) to subscribe as query parameter
