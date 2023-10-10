@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -131,7 +132,7 @@ class OrderController extends AbstractController
      * @param object $order the order to modify
      * @param object $item the item to be added
      */
-    public function addItem(Order $order, Item $item, OrderItemRepository $orderItemRepository): JsonResponse
+    public function addItem(Order $order, Item $item, OrderItemRepository $orderItemRepository, SerializerInterface $serializer, HubInterface $hub): JsonResponse
     {
         //je recherche si un order item sans commentaire et non envoyé existe déjà dans la commande
         $orderItem = $orderItemRepository->findBy(['item' => $item->getId(), 'relatedOrder' => $order->getId(), 'comment' => [null, ""], 'sent' => false]);
@@ -157,7 +158,12 @@ class OrderController extends AbstractController
             $order->addOrderItem($newOrderItem);
             $orderItemRepository->add($newOrderItem, true);
         }
+        $update = new Update(
+            $_SERVER['BASE_URL'] . '/api/orders/{order}/items/{item}',
+            $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
+        );
 
+        $hub->publish($update);
         //je retourne la commande
         return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
