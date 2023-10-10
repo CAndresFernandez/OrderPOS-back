@@ -35,8 +35,8 @@ class OrderItemController extends AbstractController
         $order = $this->orderItemService->add($orderItem);
 
         $update = new Update(
-            $_SERVER['BASE_URL'] . '/api/order-items/add/{id}',
-            $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
+            'orders',
+            $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
             // json_encode([
             //     'id' => $orderItem->getId(),
             //     'quantity' => $orderItem->getQuantity(),
@@ -60,8 +60,8 @@ class OrderItemController extends AbstractController
 
         $order = $this->orderItemService->remove($orderItem);
         $update = new Update(
-            $_SERVER['BASE_URL'] . '/api/order-items/remove/{id}',
-            $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
+            'orders',
+            $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
         );
 
         $hub->publish($update);
@@ -90,8 +90,8 @@ class OrderItemController extends AbstractController
 
         $order = $this->orderItemService->comment($orderItem, $newComment);
         $update = new Update(
-            $_SERVER['BASE_URL'] . '/api/order-items/comment/{id}',
-            $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
+            'orders',
+            $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
         );
 
         $hub->publish($update);

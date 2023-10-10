@@ -159,8 +159,8 @@ class OrderController extends AbstractController
             $orderItemRepository->add($newOrderItem, true);
         }
         $update = new Update(
-            $_SERVER['BASE_URL'] . '/api/orders/{order}/items/{item}',
-            $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
+            'orders',
+            $serializer->serialize($order, 'json', ['groups' => 'orders'])
         );
 
         $hub->publish($update);
@@ -171,25 +171,46 @@ class OrderController extends AbstractController
     /**
      * @Route("/api/orders/{id}/status", name="app_api_order_status", methods={"PUT"})
      */
-    public function modifyStatus(Order $order)
+    public function modifyStatus(Order $order, SerializerInterface $serializer, HubInterface $hub)
     {
         $orderItems = $order->getOrderItems();
-        if ($orderItems->getValues() == null) {
-            return $this->json(['message' => 'Your order is empty. Please add items to your order before sending it to the kitchen.'], Response::HTTP_FORBIDDEN);
+
+
+        $status = $order->getStatus();
+
+        switch ($status) {
+            case 0:
+                $order->setStatus(1); // send to kitchen
+                break;
+
+            case 1:
+                if ($orderItems->isEmpty()) {
+                    $order->setStatus(0); // Si $orderItems est vide, revenez à l'état 0
+                } else {
+                    $order->setStatus(2); // Sinon, changez l'état en 2 (validation depuis la cuisine)
+                    foreach ($orderItems as $orderItem) {
+                        $orderItem->setSent(true);
+                    }
+                }
+                break;
+
+            case 2:
+                $order->setStatus(1);
+                break;
+
+            default:
+                // Handle any other status values if needed
+                break;
         }
 
-        if ($order->getStatus() == 0) {
-            $order->setStatus(1);
-        } elseif ($order->getStatus() == 1) {
-            $order->setStatus(2);
-            foreach ($orderItems as $orderItem) {
-                $orderItem->setSent(true);
-            }
-        } elseif ($order->getStatus() == 2) {
-            $order->setStatus(0);
-        }
         $this->em->persist($order);
+        $update = new Update(
+            'orders',
+            $serializer->serialize($order, 'json', ['groups' => 'orders'])
+        );
         $this->em->flush();
+        $hub->publish($update);
+
         return $this->json($order, Response::HTTP_OK, ["Location" => $this->generateUrl("app_api_order_show", ['id' => $order->getId()])], ["groups" => "orders"]);
     }
 }
