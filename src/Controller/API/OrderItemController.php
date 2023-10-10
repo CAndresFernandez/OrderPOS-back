@@ -35,7 +35,7 @@ class OrderItemController extends AbstractController
         $order = $this->orderItemService->add($orderItem);
 
         $update = new Update(
-            'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/add/{id}',
+            $_SERVER['BASE_URL'] . '/api/order-items/add/{id}',
             $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
             // json_encode([
             //     'id' => $orderItem->getId(),
