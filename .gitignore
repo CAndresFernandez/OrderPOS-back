@@ -24,4 +24,6 @@
 ###< lexik/jwt-authentication-bundle ###
 
 
-./mercure
+/mercure
+/makefile
+/mercure.db
