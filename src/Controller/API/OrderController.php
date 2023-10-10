@@ -38,13 +38,6 @@ class OrderController extends AbstractController
         // Récupère toutes les tables
         $orders = $OrderRepository->findAllByStatusOne();
 
-        // $update = new Update(
-        //     'http://localhost/apo-Order/projet-8-o-commande-back/public/api/orders',
-        //     json_encode(['message' => 'well played'])
-        // );
-
-        // $hub->publish($update);
-
         return $this->json($orders, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
 

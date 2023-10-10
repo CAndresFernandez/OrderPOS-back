@@ -51,7 +51,11 @@
     //   // Will be called every time an update is published by the server
     //   console.log(JSON.parse(event.data))
     // }
+<<<<<<< HEAD
     fetch('http://localhost/Apo/back/projet-8-o-commande-back/public/back/discover').then((response) => {
+=======
+    fetch($_SERVER['BASE_URL_BACK'] . '/discover').then((response) => {
+>>>>>>> 472f4f4703c1bc42c779b0153289d785ca684b3d
       const hubUrl = response.headers.get('Link').match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
 
       // Append the topic(s) to subscribe as query parameter
