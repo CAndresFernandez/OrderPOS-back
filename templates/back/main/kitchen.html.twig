@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Bienvenue sur la home !
+{% endblock %}
+{% block menuActive %}
+  active
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <h1>Kitchen</h1>
+    {# {% set ordersPerRow = 4 %} #}
+    {# {% set batchedOrders = orders|batch(ordersPerRow) %} #}
+    <div class="row">
+      {% set ordersPerRow = 4 %}
+      {% set batchedOrders = orders|batch(ordersPerRow) %}
+      {% for orderRow in batchedOrders %}
+        {% for order in orderRow %}
+          <div class="col-md-3">
+            <table class="table">
+              <tr>
+                <th>Table {{ order.relatedTable.number }}</th>
+                <th>{{ order.relatedTable.covers }}pp</th>
+                <th>{{ order.createdAt|date('H:i') }}</th>
+              </tr>
+              <tbody>
+                {% for orderItem in order.orderitems %}
+                  <tr id="{{ orderItem.id }}">
+                    <td>{{ orderItem.item.name }}</td>
+                    <td class="quantity">{{ orderItem.quantity }}</td>
+                    {% if orderItem.comment != null %}
+                      <td>
+                        <em class="comment">{{ orderItem.comment }}</em>
+                      </td>
+                    {% endif %}
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  <script>
+    // const eventSource = new EventSource("{{ mercure('http://localhost/apo-Order/projet-8-o-commande-back/public/back/api/*')|escape('js') }}")
+    // eventSource.onmessage = (event) => {
+    //   // Will be called every time an update is published by the server
+    //   console.log(JSON.parse(event.data))
+    // }
+    fetch($_SERVER['BASE_URL'].'/back/discover').then((response) => {
+      const hubUrl = response.headers.get('Link').match(/<([^>]+)>;\s+rel=(?:mercure|"[^"]*mercure[^"]*")/)[1]
+
+      // Append the topic(s) to subscribe as query parameter
+      const hub = new URL(hubUrl, window.origin)
+      hub.searchParams.append('topic', $_SERVER['BASE_URL'].'/api/order-items/add/{id}')
+      hub.searchParams.append('topic', $_SERVER['BASE_URL'].'/api/order-items/remove/{id}')
+      hub.searchParams.append('topic', $_SERVER['BASE_URL'].'/api/order-items/comment/{id}')
+      hub.searchParams.append('topic', $_SERVER['BASE_URL'].'/api/orders/{order}/items/{item}')
+      hub.searchParams.append('topic', $_SERVER['BASE_URL'].'/api/orders/{id}/status')
+
+      // Subscribe to updates
+      const eventSource = new EventSource(hub)
+      //   const newData = event.data
+      eventSource.onmessage = (event) => {
+        console.log(event)
+        const data = JSON.parse(event.data)
+        // console.log(event.data)
+        const id = data.id
+        const quantity = data.quantity
+        const comment = data.comment
+        const trElementToModify = document.querySelector("[id='"+id+"']")
+        if (trElementToModify) {
+            if (trElementToModify.querySelector(".quantity")) {
+                const quantityElement = trElementToModify.querySelector(".quantity")
+                quantityElement.innerHTML = {{ 'quantity' }}
+            } else {
+                newTd = document.createElement("td")
+                newTd.classList.add("quantity")
+                newTd.innerHTML = {{ 'quantity' }}
+                trElementToModify.appendChild(newTd)
+            }
+            if (data.comment !== null) {
+                if (trElementToModify.querySelector(".comment")) {
+                const commentElement = trElementToModify.querySelector(".comment")
+                commentElement.innerHTML = {{ 'comment' }}
+                } else {
+                    newTd = document.createElement("td")
+                    newTd.classList.add("comment")
+                    newTd.innerHTML = {{ 'comment' }}
+                    trElementToModify.appendChild(newTd)
+                }
+            }
+        } else {
+           console.log("need to create a new item")
+        }
+      }
+    })
+  </script>
+{% endblock %}

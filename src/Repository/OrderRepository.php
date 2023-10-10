@@ -48,7 +48,7 @@ class OrderRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->add('from', 'App\Entity\Order o')
             ->Where('o.status = 1')
-            ->orderBy('o.createdAt', 'ASC')
+            ->orderBy('o.updatedAt', 'DESC')
             ->getQuery()
             ->getResult();
     }

@@ -19,13 +19,13 @@ class Table
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"tables"})
+     * @Groups({"orders", "tables"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer", unique=true)
-     * @Groups({"tables"})
+     * @Groups({"orders", "tables"})
      * @Assert\Positive
      * @Assert\NotBlank
      */
@@ -113,7 +113,7 @@ class Table
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -128,7 +128,7 @@ class Table
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 
