@@ -1,2 +1,2 @@
 mercure_server:
-	SERVER_NAME=:3000 MERCURE_PUBLISHER_JWT_KEY='eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdLCJzdWJzY3JpYmUiOlsiKiJdfX0.hx18vWyoePYpGrsmi5sQ0-kwr9_TjQ1yV413sRJZCko' MERCURE_SUBSCRIBER_JWT_KEY='eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdLCJzdWJzY3JpYmUiOlsiKiJdfX0.hx18vWyoePYpGrsmi5sQ0-kwr9_TjQ1yV413sRJZCko' mercure run --config /usr/local/bin/mercure_Darwin_arm64/Caddyfile.dev
+	SERVER_NAME=:3000 MERCURE_PUBLISHER_JWT_KEY='yvvdeVW3KfBwZWgmzyVXHUBa5YdyuaGN' MERCURE_SUBSCRIBER_JWT_KEY='yvvdeVW3KfBwZWgmzyVXHUBa5YdyuaGN' mercure run --config /usr/local/bin/mercure_Darwin_arm64/Caddyfile.dev

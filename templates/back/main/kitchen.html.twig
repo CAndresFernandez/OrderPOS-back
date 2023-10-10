@@ -62,8 +62,9 @@
       const eventSource = new EventSource(hub)
       //   const newData = event.data
       eventSource.onmessage = (event) => {
-
+        console.log(event)
         const data = JSON.parse(event.data)
+        // console.log(event.data)
         const id = data.id
         const quantity = data.quantity
         const comment = data.comment

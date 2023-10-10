@@ -7,10 +7,7 @@ use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Discovery;
-use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -62,16 +59,16 @@ class MainController extends AbstractController
     /**
      * @Route("/publish", name="app_back_publish")
      */
-    public function publish(HubInterface $hub): Response
-    {
-        $update = new Update(
-            'http://localhost/apo-Order/projet-8-o-commande-back/public/api/orders',
-            json_encode(['message' => 'hello world!'])
-        );
+    // public function publish(HubInterface $hub): Response
+    // {
+    //     $update = new Update(
+    //         'http://localhost/apo-Order/projet-8-o-commande-back/public/api/orders',
+    //         json_encode(['message' => 'hello world!'])
+    //     );
 
-        $hub->publish($update);
+    //     $hub->publish($update);
 
-        return new Response('published!');
-    }
+    //     return new Response('published!');
+    // }
 
 }

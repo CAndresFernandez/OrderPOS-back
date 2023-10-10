@@ -26,7 +26,7 @@ class OrderItemController extends AbstractController
      * @Route("/api/order-items/add/{id}", name="app_api_order_item_add", methods={"PUT"})
      * @param object $orderItem the orderItem to modify
      */
-    public function increment(OrderItem $orderItem, HubInterface $hub): Response
+    public function increment(OrderItem $orderItem, SerializerInterface $serializer, HubInterface $hub): Response
     {
         if ($orderItem->isSent()) {
             return $this->json(["error" => "article déjà envoyé"], Response::HTTP_BAD_REQUEST);
@@ -36,11 +36,12 @@ class OrderItemController extends AbstractController
 
         $update = new Update(
             'http://localhost/apo-Order/projet-8-o-commande-back/public/api/order-items/add/{id}',
-            json_encode([
-                'id' => $orderItem->getId(),
-                'quantity' => $orderItem->getQuantity(),
-                'comment' => $orderItem->getComment(),
-            ])
+            $serializer->serialize($orderItem, 'json', ['groups' => 'orders'])
+            // json_encode([
+            //     'id' => $orderItem->getId(),
+            //     'quantity' => $orderItem->getQuantity(),
+            //     'comment' => $orderItem->getComment(),
+            // ])
         );
 
         $hub->publish($update);
