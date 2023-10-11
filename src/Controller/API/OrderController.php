@@ -168,30 +168,32 @@ class OrderController extends AbstractController
     {
         $orderItems = $order->getOrderItems();
         $status = $order->getStatus();
-        $allItemsSent = true;
+        $allItemsSent = true; // On commence par supposer que tous les éléments ont été envoyés
         foreach ($orderItems as $orderItem) {
-            if (!$orderItem->isSent()) {
-                break;
+            if (!$orderItem->isSent()) { // Si un élément n'a pas été envoyé, on met la variable à false
+                $allItemsSent = false;
+                break; // Pas besoin de continuer à vérifier les autres éléments
             }
         }
 
         switch ($status) {
             case 0:
-                $order->setStatus(1);
+                $order->setStatus(1); // send to kitchen
                 break;
+
             case 1:
-                if ($orderItems->isEmpty()) {
-                    $order->setStatus(0);
+                if (empty($orderItems)) {
+                    $order->setStatus(0); // Si $orderItems est vide, revenez à l'état 0
                 } else {
-                    $order->setStatus(2);
+                    $order->setStatus(2); // Sinon, changez l'état en 2 (validation depuis la cuisine)
                     foreach ($orderItems as $orderItem) {
                         $orderItem->setSent(true);
                     }
                 }
                 break;
-
+            // si tous les orderItems sont send, on passe à l'état 2
             case 2:if ($allItemsSent) {
-                    $order->setStatus(0); //
+                    $order->setStatus(0); // Si $orderItems sont getSent=true, revenez à l'état 0
                 } else {
                     $order->setStatus(1);
                     break;
