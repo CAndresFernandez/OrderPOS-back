@@ -167,30 +167,37 @@ class OrderController extends AbstractController
     public function modifyStatus(Order $order, SerializerInterface $serializer, HubInterface $hub)
     {
         $orderItems = $order->getOrderItems();
-
-
         $status = $order->getStatus();
+        $allItemsSent = true;
+        foreach ($orderItems as $orderItem) {
+            if (!$orderItem->isSent()) {
+                break;
+            }
+        }
 
         switch ($status) {
             case 0:
-                $order->setStatus(1); // send to kitchen
+                $order->setStatus(1);
                 break;
-
             case 1:
                 if ($orderItems->isEmpty()) {
-                    $order->setStatus(0); // Si $orderItems est vide, revenez à l'état 0
+                    $order->setStatus(0);
                 } else {
-                    $order->setStatus(2); // Sinon, changez l'état en 2 (validation depuis la cuisine)
+                    $order->setStatus(2);
                     foreach ($orderItems as $orderItem) {
                         $orderItem->setSent(true);
                     }
                 }
                 break;
 
-            case 2:
-                $order->setStatus(1);
-                break;
+            case 2:if ($allItemsSent) {
+                    $order->setStatus(0); //
+                } else {
+                    $order->setStatus(1);
+                    break;
+                }
 
+            // no break
             default:
                 // Handle any other status values if needed
                 break;
@@ -201,7 +208,15 @@ class OrderController extends AbstractController
             'orders',
             $serializer->serialize($order, 'json', ['groups' => 'orders'])
         );
+
+        // Récupérez uniquement la table associée à la commande mise à jour
+        $relatedTable = $order->getRelatedTable();
+        $updateTable = new Update(
+            'tables',
+            $serializer->serialize($relatedTable, 'json', ['groups' => 'tables'])
+        );
         $this->em->flush();
+        $hub->publish($updateTable);
         $hub->publish($update);
 
         return $this->json($order, Response::HTTP_OK, ["Location" => $this->generateUrl("app_api_order_show", ['id' => $order->getId()])], ["groups" => "orders"]);

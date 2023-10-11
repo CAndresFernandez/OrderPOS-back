@@ -37,11 +37,6 @@ class OrderItemController extends AbstractController
         $update = new Update(
             'orders',
             $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
-            // json_encode([
-            //     'id' => $orderItem->getId(),
-            //     'quantity' => $orderItem->getQuantity(),
-            //     'comment' => $orderItem->getComment(),
-            // ])
         );
 
         $hub->publish($update);
