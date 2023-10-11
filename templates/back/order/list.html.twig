@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Order list{% endblock %}
+{% block orderActive %}
+  active
+{% endblock %}
+{% block body %}
+<div class="container-fluid">
+    <h1>Order list</h1>
+    {# <a href="{{ path('app_back_order_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a> #}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Table</th>
+                <th>Covers</th>
+                <th>Status</th>
+                <th>Statuts</th>
+                <th>Last Update</th>
+                {# <th>actions</th> #}
+            </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.user.firstname }}</td>
+                <td>{{ order.relatedTable.number }}</td>
+                <td>{{ order.relatedTable.covers }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    {% if order.status == 0 %}
+                        In Progress
+                    {% elseif order.status == 1 %}
+                        Preparing
+                    {% elseif order.status == 2 %}
+                        Waiting payment
+                    {% elseif order.status == 3 %}
+                        Paid
+                    {% elseif order.status == 4 %}
+                        Canceled
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.updatedAt != "" %}
+                        {{ order.createdAt|date('Y-m-d H:i:s') }}
+                    {% else %}
+                        {{ order.updatedAt|date('Y-m-d H:i:s') }}
+                    {% endif %}
+                </td>
+                {# Fonctionnalité a ajouter si le front ne le gère pas #}
+                {# <td>
+                    <a href=""><button type="button" class="btn btn-sm btn-primary mx-1 mb-2 bi"> Canceled</button></a>
+                </td> #}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

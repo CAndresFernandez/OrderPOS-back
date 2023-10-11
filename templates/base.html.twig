@@ -56,6 +56,13 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link {% block orderActive %}
+                    {% endblock %}"
+                    href="{{ path('app_back_order_list') }}">
+                    <i class="bi"></i>Orders
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link {% block closedActive %}
                     {% endblock %}"
                     href="{{ path('app_back_closed_order_list') }}">

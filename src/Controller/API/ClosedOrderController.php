@@ -87,4 +87,52 @@ class ClosedOrderController extends AbstractController
         // norme rest : 201, Location avec le lien de la ressource
         return $this->json($closedOrder, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_api_closed_show", ["id" => $closedOrder->getId()])]);
     }
+
+    /**
+     * @Route("/api/orders/{id}/cancel", name="app_api_cancel", methods={"POST"})
+     */
+    public function cancel(Order $order, ClosedOrderRepository $closedOrderRepository, OrderRepository $orderRepository, ValidatorInterface $validator): JsonResponse
+    {
+        $orderItems = $order->getOrderItems();
+        $server = $order->getUser();
+        $serverName = $server->getFirstname() . ' ' . $server->getLastname();
+
+        $closedOrder = new ClosedOrder;
+        $total = 0;
+        $count = 0;
+        $closedOrderItems = [];
+        foreach ($orderItems as $orderItem) {
+            $item = $orderItem->getItem();
+            $totalOrderItem = $item->getPrice() * $orderItem->getQuantity();
+            $total += $totalOrderItem;
+            $count += $orderItem->getQuantity();
+            $currentOrderItem = [
+                "name" => $item->getName(),
+                "quantity" => $orderItem->getQuantity(),
+                "price" => $item->getPrice(),
+                "total" => $totalOrderItem,
+            ];
+            $closedOrderItems[] = $currentOrderItem;
+        }
+
+        $closedOrder->setItems($closedOrderItems);
+        $closedOrder->setTotal($total);
+        $closedOrder->setCount($count);
+        $closedOrder->setUserId($serverName);
+        $closedOrder->setPaid(false);
+
+        $errors = $validator->validate($closedOrder);
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                // je me crée un tableau avec les erreurs en valeur et les champs concernés en index
+                $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $closedOrderRepository->add($closedOrder, true);
+        $orderRepository->remove($order, true);
+
+        return $this->json($closedOrder, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_api_closed_show", ["id" => $closedOrder->getId()])]);
+    }
 }

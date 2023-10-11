@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Order{% endblock %}
+
+{% block body %}
+    <h1>Create new Order</h1>
+
+    {{ include('back/order/_form.html.twig') }}
+
+    <a href="{{ path('app_back_order_list') }}">back to list</a>
+{% endblock %}
