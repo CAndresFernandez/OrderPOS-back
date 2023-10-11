@@ -81,6 +81,7 @@ class ClosedOrderController extends AbstractController
         }
 
         $closedOrderRepository->add($closedOrder, true);
+        $order->setStatus(0);
         $orderRepository->remove($order, true);
 
         // on retourne le closedOrder créé en json
@@ -131,6 +132,7 @@ class ClosedOrderController extends AbstractController
         }
 
         $closedOrderRepository->add($closedOrder, true);
+        $order->setStatus(0);
         $orderRepository->remove($order, true);
 
         return $this->json($closedOrder, Response::HTTP_CREATED, ["Location" => $this->generateUrl("app_api_closed_show", ["id" => $closedOrder->getId()])]);
