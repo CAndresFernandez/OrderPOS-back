@@ -34,12 +34,13 @@ class MainController extends AbstractController
     public function kitchen(OrderRepository $orderRepository)
     {
         $ordersToDisplay = $orderRepository->findAllByStatusOne();
+        $orderItems = [];
         foreach ($ordersToDisplay as $order) {
-            $orderItems = $order->getOrderItems();
+            $orderItems[] = $order->getOrderItems();
         }
         return $this->render("back/main/kitchen.html.twig", [
             'orders' => $ordersToDisplay,
-            'items' => $orderItems,
+            'orderItems' => $orderItems
         ]);
     }
 

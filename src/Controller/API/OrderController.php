@@ -182,7 +182,7 @@ class OrderController extends AbstractController
                 break;
 
             case 1:
-                if (empty($orderItems)) {
+                if ($orderItems->isEmpty()) {
                     $order->setStatus(0); // Si $orderItems est vide, revenez à l'état 0
                 } else {
                     $order->setStatus(2); // Sinon, changez l'état en 2 (validation depuis la cuisine)
@@ -191,15 +191,16 @@ class OrderController extends AbstractController
                     }
                 }
                 break;
-            // si tous les orderItems sont send, on passe à l'état 2
-            case 2:if ($allItemsSent) {
+                // si tous les orderItems sont send, on passe à l'état 2
+            case 2:
+                if ($allItemsSent) {
                     $order->setStatus(0); // Si $orderItems sont getSent=true, revenez à l'état 0
                 } else {
                     $order->setStatus(1);
                     break;
                 }
 
-            // no break
+                // no break
             default:
                 // Handle any other status values if needed
                 break;

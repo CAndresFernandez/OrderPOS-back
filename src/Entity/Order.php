@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\OrderRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -105,7 +106,7 @@ class Order
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAt() : self
+    public function setCreatedAt(): self
     {
         $this->createdAt = new \DateTimeImmutable();
 
@@ -120,7 +121,7 @@ class Order
     /**
      * @ORM\PreUpdate
      */
-    public function setUpdatedAt() : self
+    public function setUpdatedAt(): self
     {
         $this->updatedAt = new DateTimeImmutable();
 
@@ -128,11 +129,11 @@ class Order
     }
 
     /**
-     * @return Array<OrderItem>
+     * @return Collection<int, OrderItem>
      */
-    public function getOrderItems(): array
+    public function getOrderItems(): Collection
     {
-        return $this->orderItems->getValues();
+        return $this->orderItems;
     }
 
     public function addOrderItem(OrderItem $orderItem): self
