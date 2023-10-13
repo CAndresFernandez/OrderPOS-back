@@ -182,7 +182,7 @@ class OrderController extends AbstractController
                 break;
 
             case 1:
-                if (empty($orderItems)) {
+                if ($orderItems->isEmpty()) {
                     $order->setStatus(0); // Si $orderItems est vide, revenez à l'état 0
                 } else {
                     $order->setStatus(2); // Sinon, changez l'état en 2 (validation depuis la cuisine)

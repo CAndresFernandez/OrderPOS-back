@@ -56,7 +56,7 @@ class OrderItemController extends AbstractController
         $order = $this->orderItemService->remove($orderItem);
         $update = new Update(
             'orders',
-            $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
+            $serializer->serialize($order, 'json', ['groups' => 'orders'])
         );
 
         $hub->publish($update);
