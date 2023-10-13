@@ -20,13 +20,13 @@ class Category
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"items","categories"})
+     * @Groups({"items","categories","orders"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Groups({"items","categories"})
+     * @Groups({"items","categories","orders"})
      * @Assert\NotBlank
      */
     private $name;

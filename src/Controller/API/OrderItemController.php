@@ -34,12 +34,12 @@ class OrderItemController extends AbstractController
 
         $order = $this->orderItemService->add($orderItem);
 
-        $update = new Update(
-            'orders',
-            $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
-        );
+        // $update = new Update(
+        //     'orders',
+        //     $serializer->serialize($orderItem->getRelatedOrder(), 'json', ['groups' => 'orders'])
+        // );
 
-        $hub->publish($update);
+        // $hub->publish($update);
 
         return $this->json($order, Response::HTTP_OK, [], ["groups" => "orders"]);
     }
