@@ -11,15 +11,15 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('login', NumberType::class, [
-
-            ])
+            ->add('login', NumberType::class, [])
             ->add('roles', ChoiceType::class, [
                 "choices" => [
                     "Administrator" => "ROLE_ADMIN",
@@ -45,13 +45,15 @@ class UserType extends AbstractType
             $builder
                 ->add('password', RepeatedType::class, [
                     "type" => PasswordType::class,
-                    "first_options" => ["label" => "Rentrez un mot de passe", "help" => "Le mot de passe doit avoir minimum 4 caractères"],
+                    "constraints" => new Regex([
+                        'pattern' => "/^[0-9]{4}$/",
+                        'message' => 'Le mot de passe doit avoir exactement 4 chiffres.'
+                    ]),
+                    "first_options" => ["label" => "Rentrez un mot de passe", "help" => "Le mot de passe doit avoir exactement 4 chiffres"],
                     "second_options" => ["label" => "Confirmez le mot de passe"],
                     "invalid_message" => "Les champs doivent être identiques",
                 ]);
-        }
-
-        ;
+        };
     }
 
     public function configureOptions(OptionsResolver $resolver): void

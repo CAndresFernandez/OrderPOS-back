@@ -40,7 +40,7 @@ class Item
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"items"})
-     * @Assert\Length(min=10, max=100, minMessage="The description must be at least {{ limit }} characters long", maxMessage="The description cannot be longer than {{ limit }} characters")
+     * @Assert\Length(min=10, max=200, minMessage="The description must be at least {{ limit }} characters long", maxMessage="The description cannot be longer than {{ limit }} characters")
      */
     private $description;
 
