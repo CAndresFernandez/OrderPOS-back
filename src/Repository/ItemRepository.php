@@ -39,28 +39,26 @@ class ItemRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Item[] Returns an array of Item objects
-//     */
-//    public function findAllSortByMenuPosition(): array
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->add('from', 'App\Entity\Item i')
-//         //    ->leftJoin('i.category', 'c')
-//            ->innerJoin('App\Entity\Category', 'c', 'WITH', 'c.id = i.category')
-//            ->where('i.active = true')
-//            ->orderBy('c.menu_position', 'ASC')
-//            ->getQuery()
-//            ->getResult();
-//    }
+    /**
+     * @return Item[] Returns an array of Item objects
+     */
+    public function findAllSortByMenuPosition(): array
+    {
+        return $this->createQueryBuilder('i')
+            ->add('from', 'App\Entity\Item i')
+            ->innerJoin('App\Entity\Category', 'c', 'WITH', 'c.id = i.category')
+            ->orderBy('c.menu_position', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Item
-//    {
-//        return $this->createQueryBuilder('i')
-//            ->andWhere('i.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    {
+    //        return $this->createQueryBuilder('i')
+    //            ->andWhere('i.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
