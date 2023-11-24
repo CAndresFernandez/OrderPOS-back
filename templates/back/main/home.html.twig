@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Bienvenue sur la home !
+{% endblock %}
+{% block menuActive %}
+  active
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <h1>Menu</h1>
+    <table class="table">
+      <tbody>
+        {% for category in categories %}
+          <tr>
+            <th>{{ category.name }}</th>
+            {% for item in category.items %}
+              {% if item.active == true %}
+                <tr>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.description }}</td>
+                  <td>{{ item.price }}</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

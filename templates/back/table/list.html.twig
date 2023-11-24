@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Table list
+{% endblock %}
+{% block tableActive %}
+  active
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <h1>Table List</h1>
+    <a href="{{ path('app_back_table_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Number</th>
+          <th>Covers</th>
+          <th>Active</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for table in tables %}
+          <tr>
+            <td>{{ table.number }}</td>
+            <td>{{ table.covers }}</td>
+            <td>{{ table.active ? 'Yes' : 'No' }}</td>
+            <td>
+              <a href="{{ path('app_back_table_show', { id: table.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
+              <a href="{{ path('app_back_table_edit', { id: table.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="7">No records found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

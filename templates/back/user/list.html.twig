@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  User list
+{% endblock %}
+{% block userActive %}
+  active
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <h1>User List</h1>
+    <a href="{{ path('app_back_user_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Login</th>
+          <th>Roles</th>
+          <th>Firstname</th>
+          <th>Lastname</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.login }}</td>
+            <td>
+              <!-- Initialise une variable rolesText comme une chaîne vide -->
+              {% set rolesText = '' %} 
+              <!-- Démarre une boucle pour chaque élément dans le tableau user.roles -->
+              {% for role in user.roles %} 
+                  <!-- Enlève le préfixe "ROLE_" de chaque élément du tableau et stocke le résultat dans roleName -->
+                  {% set roleName = role|replace({'ROLE_': ''}) %} 
+                  <!-- Concatène le rôle (après avoir enlevé le préfixe) à la variable rolesText suivie d'une virgule et d'un espace -->
+                  {% set rolesText = rolesText ~ roleName ~ ', ' %} 
+              {% endfor %}
+              <!-- Affiche les rôles concaténés dans rolesText après avoir supprimé la virgule et l'espace en trop à la fin de la chaîne -->
+              {{ rolesText|trim(', ') }}
+            </td>
+            <td>{{ user.firstname }}</td>
+            <td>{{ user.lastname }}</td>
+            <td>
+              <a href="{{ path('app_back_user_show', { id: user.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
+              <a href="{{ path('app_back_user_edit', { id: user.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="9">No records found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

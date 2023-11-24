@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Item List
+{% endblock %}
+{% block itemActive %}
+  active
+{% endblock %}
+{% block body %}
+  <div class="container-fluid">
+    <h1>Item List</h1>
+    <a href="{{ path('app_back_item_new') }}"><button type="button" class="btn btn-primary mb-3 bi bi-plus-lg"></button></a>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Active</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.description }}</td>
+            <td>{{ item.category.name }}</td>
+            <td>{{ item.active ? 'Yes' : 'No' }}</td>
+            <td>
+              <a href="{{ path('app_back_item_show', { id: item.id }) }}"><button type="button" class="btn btn-info btn-sm bi bi-eye"></button></a>
+              <a href="{{ path('app_back_item_edit', { id: item.id }) }}"><button type="button" class="btn btn-warning btn-sm bi bi-pencil-square"></button></a>
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="8">No records found</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

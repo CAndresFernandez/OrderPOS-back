@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+  Edit Category
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+  <h1>Edit Category</h1>
+
+  {{ include('back/category/_form.html.twig', { button_label: ' Update' }) }}
+
+  {{ include('back/category/_delete_form.html.twig') }}
+
+  <a href="{{ path('app_back_category_list') }}"><button type="button" class="btn btn-sm btn-primary mx-1 mb-2 bi bi-arrow-left-square"> Back to list</button></a>
+
+  </div>
+{% endblock %}
